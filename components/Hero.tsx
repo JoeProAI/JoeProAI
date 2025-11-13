@@ -12,7 +12,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center px-4 py-2 glass mb-8 text-sm font-medium"
+          className="inline-flex items-center px-4 py-2 glass mb-8 text-sm font-medium clip-corners"
         >
           <span className="text-secondary dark:text-slate-300">AI-Powered Platform</span>
         </motion.div>
@@ -75,7 +75,7 @@ export default function Hero() {
           {['OpenAI', 'xAI (Grok)', 'Custom Agents', 'RSS Feeds', 'Real-time Data'].map((feature, i) => (
             <span
               key={i}
-              className="px-4 py-2 glass rounded-full text-sm text-secondary dark:text-slate-400 card-border"
+              className="px-4 py-2 glass clip-corners text-sm text-secondary dark:text-slate-400 card-border"
             >
               {feature}
             </span>

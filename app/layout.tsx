@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import { Cpu } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,12 +36,10 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               {/* Logo */}
-              <Link href="/" className="flex items-center gap-2 group">
-                <Cpu className="w-6 h-6 text-neon-cyan group-hover:animate-pulse" />
+              <Link href="/" className="flex items-center group">
                 <span className="text-xl font-bold">
-                  <span className="neon-text-pink">Joe</span>
-                  <span className="neon-text-cyan">Pro</span>
-                  <span className="text-white">.ai</span>
+                  <span className="text-gradient">JoePro</span>
+                  <span className="text-foreground">.ai</span>
                 </span>
               </Link>
 
@@ -50,19 +47,19 @@ export default function RootLayout({
               <div className="flex items-center gap-6">
                 <Link 
                   href="/apps" 
-                  className="text-gray-300 hover:text-neon-cyan transition-colors"
+                  className="text-secondary hover:text-primary transition-colors"
                 >
                   Apps
                 </Link>
                 <Link 
                   href="/agents" 
-                  className="text-gray-300 hover:text-neon-purple transition-colors"
+                  className="text-secondary hover:text-primary transition-colors"
                 >
                   Agents
                 </Link>
                 <Link 
                   href="/feeds" 
-                  className="text-gray-300 hover:text-neon-pink transition-colors"
+                  className="text-secondary hover:text-primary transition-colors"
                 >
                   Feeds
                 </Link>
@@ -77,25 +74,24 @@ export default function RootLayout({
         </div>
 
         {/* Footer */}
-        <footer className="relative z-10 border-t border-gray-800 glass mt-20">
+        <footer className="relative z-10 border-t glass mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <Cpu className="w-5 h-5 text-neon-cyan" />
-                <span className="text-sm text-gray-400">
+              <div className="flex items-center">
+                <span className="text-sm text-secondary">
                   © 2025 JoePro.ai - Powered by Next.js & AI
                 </span>
               </div>
-              <div className="flex gap-4 text-sm text-gray-400">
-                <a href="/api/gadgets/latest" className="hover:text-neon-cyan transition-colors">
+              <div className="flex gap-4 text-sm text-secondary">
+                <a href="/api/gadgets/latest" className="hover:text-primary transition-colors">
                   API
                 </a>
                 <span>•</span>
-                <a href="https://github.com" className="hover:text-neon-cyan transition-colors">
+                <a href="https://github.com" className="hover:text-primary transition-colors">
                   GitHub
                 </a>
                 <span>•</span>
-                <a href="https://vercel.com" className="hover:text-neon-cyan transition-colors">
+                <a href="https://vercel.com" className="hover:text-primary transition-colors">
                   Deploy
                 </a>
               </div>
