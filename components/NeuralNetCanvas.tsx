@@ -16,18 +16,31 @@ export default function NeuralNetCanvas() {
   const mousePos = useRef({ x: 0, y: 0 });
   const animationRef = useRef<number>();
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     // Check for reduced motion preference
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(motionQuery.matches);
     
-    const handleChange = (e: MediaQueryListEvent) => {
+    // Check for dark mode
+    const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    setIsDark(darkQuery.matches);
+    
+    const handleMotionChange = (e: MediaQueryListEvent) => {
       setPrefersReducedMotion(e.matches);
     };
     
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    const handleDarkChange = (e: MediaQueryListEvent) => {
+      setIsDark(e.matches);
+    };
+    
+    motionQuery.addEventListener('change', handleMotionChange);
+    darkQuery.addEventListener('change', handleDarkChange);
+    return () => {
+      motionQuery.removeEventListener('change', handleMotionChange);
+      darkQuery.removeEventListener('change', handleDarkChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -85,7 +98,8 @@ export default function NeuralNetCanvas() {
     if (!ctx) return;
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+      // Subtle background clear
+      ctx.fillStyle = isDark ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.08)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Update and draw nodes
@@ -125,14 +139,21 @@ export default function NeuralNetCanvas() {
           const distance = Math.sqrt(dx * dx + dy * dy);
           
           if (distance < 150) {
-            const opacity = (1 - distance / 150) * 0.5;
+            const opacity = (1 - distance / 150) * 0.15;
+            // Subtle gradient lines
             const gradient = ctx.createLinearGradient(node.x, node.y, otherNode.x, otherNode.y);
-            gradient.addColorStop(0, `rgba(255, 16, 240, ${opacity})`);
-            gradient.addColorStop(0.5, `rgba(0, 240, 255, ${opacity})`);
-            gradient.addColorStop(1, `rgba(176, 38, 255, ${opacity})`);
+            if (isDark) {
+              gradient.addColorStop(0, `rgba(100, 116, 139, ${opacity})`);
+              gradient.addColorStop(0.5, `rgba(148, 163, 184, ${opacity})`);
+              gradient.addColorStop(1, `rgba(71, 85, 105, ${opacity})`);
+            } else {
+              gradient.addColorStop(0, `rgba(203, 213, 225, ${opacity})`);
+              gradient.addColorStop(0.5, `rgba(226, 232, 240, ${opacity})`);
+              gradient.addColorStop(1, `rgba(148, 163, 184, ${opacity})`);
+            }
             
             ctx.strokeStyle = gradient;
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 0.8;
             ctx.beginPath();
             ctx.moveTo(node.x, node.y);
             ctx.lineTo(otherNode.x, otherNode.y);
@@ -145,23 +166,29 @@ export default function NeuralNetCanvas() {
           Math.pow(mousePos.current.x - node.x, 2) + 
           Math.pow(mousePos.current.y - node.y, 2)
         );
-        const nodeSize = mouseDist < 100 ? 4 + (100 - mouseDist) / 20 : 3;
+        const nodeSize = mouseDist < 100 ? 3.5 + (100 - mouseDist) / 25 : 2.5;
         
+        // Subtle node gradient
         const nodeGradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, nodeSize * 2);
-        nodeGradient.addColorStop(0, 'rgba(0, 240, 255, 1)');
-        nodeGradient.addColorStop(0.5, 'rgba(255, 16, 240, 0.8)');
-        nodeGradient.addColorStop(1, 'rgba(176, 38, 255, 0)');
+        if (isDark) {
+          nodeGradient.addColorStop(0, 'rgba(148, 163, 184, 0.8)');
+          nodeGradient.addColorStop(0.5, 'rgba(100, 116, 139, 0.5)');
+          nodeGradient.addColorStop(1, 'rgba(71, 85, 105, 0)');
+        } else {
+          nodeGradient.addColorStop(0, 'rgba(148, 163, 184, 0.7)');
+          nodeGradient.addColorStop(0.5, 'rgba(203, 213, 225, 0.4)');
+          nodeGradient.addColorStop(1, 'rgba(226, 232, 240, 0)');
+        }
         
         ctx.fillStyle = nodeGradient;
         ctx.beginPath();
         ctx.arc(node.x, node.y, nodeSize, 0, Math.PI * 2);
         ctx.fill();
 
-        // Glow effect on hover
+        // Subtle glow effect on hover
         if (mouseDist < 50) {
-          ctx.shadowBlur = 20;
-          ctx.shadowColor = '#00F0FF';
-          ctx.fillStyle = 'rgba(0, 240, 255, 0.8)';
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = isDark ? 'rgba(148, 163, 184, 0.5)' : 'rgba(100, 116, 139, 0.3)';
           ctx.beginPath();
           ctx.arc(node.x, node.y, nodeSize, 0, Math.PI * 2);
           ctx.fill();

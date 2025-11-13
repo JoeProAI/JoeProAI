@@ -2,78 +2,70 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Sparkles, Zap, Brain } from 'lucide-react';
+import { ArrowRight, Sparkles, Brain, Rss } from 'lucide-react';
 
 export default function Hero() {
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4">
       <div className="max-w-6xl mx-auto text-center">
-        {/* Animated Badge */}
+        {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass neon-border-cyan mb-8"
+          transition={{ duration: 0.5 }}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 text-sm font-medium"
         >
-          <Sparkles className="w-4 h-4 text-neon-cyan animate-pulse" />
-          <span className="text-sm font-medium text-neon-cyan">AI-Powered Innovation Hub</span>
+          <Sparkles className="w-4 h-4 text-primary" />
+          <span className="text-secondary dark:text-slate-300">AI-Powered Platform</span>
         </motion.div>
 
         {/* Main Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-6xl md:text-8xl font-bold mb-6 leading-tight"
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
         >
-          <span className="neon-text-pink">Joe</span>
-          <span className="neon-text-cyan">Pro</span>
-          <span className="text-white">.ai</span>
+          <span className="text-gradient">JoePro</span>
+          <span className="text-foreground">.ai</span>
         </motion.h1>
 
         {/* Subheadline */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-lg md:text-xl text-secondary dark:text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed"
         >
-          Your cyberpunk gateway to cutting-edge AI tools, custom agents, 
-          and real-time tech intelligence. Built for creators, developers, and innovators.
+          Build smarter with AI. Access OpenAI and xAI models, create custom agents, 
+          and stay updated with real-time tech feeds.
         </motion.p>
 
         {/* CTA Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <Link href="/apps">
-            <button className="group relative px-8 py-4 bg-gradient-to-r from-neon-pink to-neon-purple rounded-lg font-semibold text-white overflow-hidden transition-all hover:scale-105 hover:shadow-neon-pink">
-              <span className="relative z-10 flex items-center gap-2">
-                <Zap className="w-5 h-5" />
-                Explore Apps
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-neon-purple to-neon-cyan opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Link href="/apps" className="w-full sm:w-auto">
+            <button className="w-full sm:w-auto group px-8 py-4 bg-primary hover:bg-blue-700 text-white rounded-xl font-medium transition-all hover:shadow-lg flex items-center justify-center gap-2">
+              Get Started
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </Link>
 
-          <Link href="/agents">
-            <button className="group px-8 py-4 glass neon-border-cyan rounded-lg font-semibold text-neon-cyan transition-all hover:scale-105 hover:shadow-neon-cyan">
-              <span className="flex items-center gap-2">
-                <Brain className="w-5 h-5" />
-                Launch Agents
-              </span>
+          <Link href="/agents" className="w-full sm:w-auto">
+            <button className="w-full sm:w-auto group px-8 py-4 glass card-border hover:card-border-hover rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+              <Brain className="w-5 h-5" />
+              AI Agents
             </button>
           </Link>
 
-          <Link href="/feeds">
-            <button className="group px-8 py-4 glass border border-gray-700 rounded-lg font-semibold text-gray-300 transition-all hover:scale-105 hover:border-neon-purple hover:text-neon-purple">
-              <span className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5" />
-                Tech Feeds
-              </span>
+          <Link href="/feeds" className="w-full sm:w-auto">
+            <button className="w-full sm:w-auto group px-8 py-4 glass card-border hover:card-border-hover rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+              <Rss className="w-5 h-5" />
+              Tech Feeds
             </button>
           </Link>
         </motion.div>
@@ -82,13 +74,13 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-16 flex flex-wrap gap-3 justify-center"
         >
-          {['🤖 OpenAI', '⚡ xAI', '🧠 Custom Agents', '📡 Live Feeds', '🎨 Cyberpunk UI'].map((feature, i) => (
+          {['OpenAI', 'xAI (Grok)', 'Custom Agents', 'RSS Feeds', 'Real-time Data'].map((feature, i) => (
             <span
               key={i}
-              className="px-4 py-2 glass rounded-full text-sm text-gray-400 border border-gray-800 hover:border-neon-cyan hover:text-neon-cyan transition-all cursor-default"
+              className="px-4 py-2 glass rounded-full text-sm text-secondary dark:text-slate-400 card-border"
             >
               {feature}
             </span>
@@ -99,19 +91,18 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.2 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
         >
-          <div className="flex flex-col items-center gap-2 text-gray-500">
-            <span className="text-xs uppercase tracking-wider">Scroll to explore</span>
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-6 h-10 border-2 border-gray-700 rounded-full flex items-start justify-center p-2"
-            >
-              <div className="w-1 h-2 bg-neon-cyan rounded-full" />
-            </motion.div>
-          </div>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            className="text-secondary dark:text-slate-500"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </motion.div>
         </motion.div>
       </div>
     </div>
