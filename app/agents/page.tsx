@@ -147,9 +147,9 @@ export default function AgentsPage() {
               <h2 className="font-bold text-lg">Your Agents</h2>
               <button
                 onClick={() => setShowCreateAgent(!showCreateAgent)}
-                className="p-2 bg-primary hover:bg-blue-700 text-white transition-all"
+                className="p-2 bg-primary hover:bg-blue-700 text-white transition-all clip-corners premium-button"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-5 h-5" />
               </button>
             </div>
 
@@ -182,13 +182,13 @@ export default function AgentsPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={createAgent}
-                    className="flex-1 px-3 py-2 bg-primary hover:bg-blue-700 text-white text-sm transition-all"
+                    className="flex-1 px-3 py-2 bg-primary hover:bg-blue-700 text-white text-sm transition-all clip-corners premium-button"
                   >
                     Create
                   </button>
                   <button
                     onClick={() => setShowCreateAgent(false)}
-                    className="px-3 py-2 glass card-border text-secondary text-sm"
+                    className="px-3 py-2 glass card-border text-secondary text-sm clip-corners premium-button"
                   >
                     Cancel
                   </button>
@@ -221,7 +221,7 @@ export default function AgentsPage() {
                           e.stopPropagation();
                           deleteAgent(agent.id);
                         }}
-                        className="ml-2 p-1 text-secondary hover:text-red-500 transition-colors"
+                        className="p-1 text-secondary hover:text-red-500 transition-colors clip-corners premium-button"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -337,7 +337,7 @@ export default function AgentsPage() {
                     <button
                       onClick={sendMessage}
                       disabled={loading || (!input.trim() && !uploadedImage)}
-                      className="px-6 bg-primary hover:bg-blue-700 text-white font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      className="px-6 bg-primary hover:bg-blue-700 text-white font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 clip-corners"
                     >
                       <Send className="w-5 h-5" />
                     </button>
