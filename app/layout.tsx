@@ -48,19 +48,25 @@ export default function RootLayout({
               <div className="flex items-center gap-6">
                 <Link 
                   href="/apps" 
-                  className="text-secondary hover:text-primary transition-colors"
+                  className="text-gray-300 hover:text-primary transition-colors"
                 >
                   Apps
                 </Link>
                 <Link 
                   href="/agents" 
-                  className="text-secondary hover:text-primary transition-colors"
+                  className="text-gray-300 hover:text-primary transition-colors"
                 >
                   Agents
                 </Link>
                 <Link 
+                  href="/devenv" 
+                  className="text-gray-300 hover:text-primary transition-colors"
+                >
+                  Dev Env
+                </Link>
+                <Link 
                   href="/feeds" 
-                  className="text-secondary hover:text-primary transition-colors"
+                  className="text-gray-300 hover:text-primary transition-colors"
                 >
                   Feeds
                 </Link>
