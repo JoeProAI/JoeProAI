@@ -206,7 +206,7 @@ export default function NeuralNetCanvas() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [nodes, prefersReducedMotion]);
+  }, [nodes, prefersReducedMotion, isDark]);
 
   if (prefersReducedMotion) {
     return (
