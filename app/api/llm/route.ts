@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
         headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' },
       });
     } else {
-      let response;
+      let response: any;
       
       if (provider === 'openai') {
         response = await createOpenAICompletion(messages, model || 'gpt-4-turbo-preview', temperature, false);
@@ -57,10 +57,11 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Unknown provider' }, { status: 400 });
       }
 
+      // Type assertion: when stream is false, response is ChatCompletion
       return NextResponse.json({
-        content: response.choices[0]?.message?.content || '',
-        model: response.model,
-        usage: response.usage,
+        content: response.choices?.[0]?.message?.content || '',
+        model: response.model || model,
+        usage: response.usage || {},
       });
     }
   } catch (error: any) {
