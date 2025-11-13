@@ -1,14 +1,14 @@
 import Hero from '@/components/Hero';
-import NeuralNetCanvas from '@/components/NeuralNetCanvas';
+import AnimatedBackground from '@/components/AnimatedBackground';
 
 // Force dynamic rendering to avoid build timeout with canvas/animation client components
 export const dynamic = 'force-dynamic';
 
 export default function Home() {
   return (
-    <main className="relative">
-      <NeuralNetCanvas />
+    <>
+      <AnimatedBackground />
       <Hero />
-    </main>
+    </>
   );
 }

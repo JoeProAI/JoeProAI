@@ -3,21 +3,21 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #1a1a1a;
-  --primary: #2563eb;
-  --secondary: #64748b;
-  --accent: #0ea5e9;
-  --border: #e2e8f0;
-  --card-bg: #ffffff;
+  --background: #0a0a1a;
+  --foreground: #ffffff;
+  --primary: #3b82f6;
+  --secondary: #94a3b8;
+  --accent: #8b5cf6;
+  --border: rgba(255, 255, 255, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.05);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0f172a;
-    --foreground: #f8fafc;
-    --card-bg: #1e293b;
-    --border: #334155;
+    --background: #0a0a1a;
+    --foreground: #ffffff;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
   }
 }
 
