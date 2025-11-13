@@ -16,7 +16,7 @@ export function getXAIClient(): OpenAI {
 
 export async function createXAICompletion(
   messages: Array<{ role: string; content: string }>,
-  model: string = 'grok-beta',
+  model: string = 'grok-2-latest',
   temperature: number = 0.7,
   stream: boolean = false
 ) {

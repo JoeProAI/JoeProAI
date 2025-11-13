@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       if (provider === 'openai') {
         streamResponse = await createOpenAIStreamCompletion(messages, model || 'gpt-4-turbo-preview', temperature);
       } else if (provider === 'xai') {
-        streamResponse = await createXAIStreamCompletion(messages, model || 'grok-beta', temperature);
+        streamResponse = await createXAIStreamCompletion(messages, model || 'grok-2-latest', temperature);
       } else {
         return NextResponse.json({ error: 'Unknown provider' }, { status: 400 });
       }
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       if (provider === 'openai') {
         response = await createOpenAICompletion(messages, model || 'gpt-4-turbo-preview', temperature, false);
       } else if (provider === 'xai') {
-        response = await createXAICompletion(messages, model || 'grok-beta', temperature, false);
+        response = await createXAICompletion(messages, model || 'grok-2-latest', temperature, false);
       } else {
         return NextResponse.json({ error: 'Unknown provider' }, { status: 400 });
       }
