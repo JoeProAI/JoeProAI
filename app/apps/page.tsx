@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   description: 'Explore our collection of cutting-edge AI applications and tools.',
 };
 
+// Force dynamic rendering to avoid build timeout with client components
+export const dynamic = 'force-dynamic';
+
 const apps = [
   {
     title: 'Chat AI',
