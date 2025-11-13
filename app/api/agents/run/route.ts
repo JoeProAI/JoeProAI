@@ -3,7 +3,8 @@ import { loadAgentConfig } from '@/lib/agents/config';
 import { createOpenAIStreamCompletion } from '@/lib/llm/openai-client';
 import { createXAIStreamCompletion } from '@/lib/llm/xai-client';
 
-export const runtime = 'edge';
+// Using Node.js runtime because loadAgentConfig uses fs/path modules
+export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
   try {
