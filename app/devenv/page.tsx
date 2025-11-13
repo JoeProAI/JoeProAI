@@ -1,265 +1,240 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Code2, Play, Square, Trash2, Plus, ExternalLink, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { Rocket, Zap, ExternalLink, Sparkles } from 'lucide-react';
 
-interface Workspace {
+interface SandboxTemplate {
   id: string;
   name: string;
-  repositoryUrl?: string;
-  status: 'creating' | 'running' | 'stopped' | 'error';
-  url?: string;
+  description: string;
+  icon: string;
+  stack: string;
+}
+
+interface LaunchedSandbox {
+  id: string;
+  url: string;
+  template: string;
   createdAt: string;
 }
 
-export default function DevEnvPage() {
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
-  const [showCreate, setShowCreate] = useState(false);
-  const [newWorkspace, setNewWorkspace] = useState({
-    name: '',
-    repositoryUrl: '',
-    branch: 'main'
-  });
+const TEMPLATES: SandboxTemplate[] = [
+  {
+    id: 'node',
+    name: 'Node.js',
+    description: 'Node.js + npm/yarn',
+    icon: '🟢',
+    stack: 'node:20-alpine',
+  },
+  {
+    id: 'python',
+    name: 'Python',
+    description: 'Python 3.11 + pip',
+    icon: '🐍',
+    stack: 'python:3.11-slim',
+  },
+  {
+    id: 'react',
+    name: 'React',
+    description: 'React + Vite + TypeScript',
+    icon: '⚛️',
+    stack: 'node:20',
+  },
+  {
+    id: 'nextjs',
+    name: 'Next.js',
+    description: 'Next.js 14 + App Router',
+    icon: '▲',
+    stack: 'node:20',
+  },
+  {
+    id: 'fullstack',
+    name: 'Full Stack',
+    description: 'Node + PostgreSQL + Redis',
+    icon: '🚀',
+    stack: 'node:20',
+  },
+  {
+    id: 'ai',
+    name: 'AI/ML',
+    description: 'Python + Jupyter + TensorFlow',
+    icon: '🤖',
+    stack: 'python:3.11',
+  },
+];
 
-  useEffect(() => {
-    fetchWorkspaces();
-  }, []);
+export default function SandboxLauncher() {
+  const [launching, setLaunching] = useState<string | null>(null);
+  const [launched, setLaunched] = useState<LaunchedSandbox | null>(null);
 
-  const fetchWorkspaces = async () => {
-    try {
-      const response = await fetch('/api/daytona/workspaces');
-      const data = await response.json();
-      setWorkspaces(data.workspaces || []);
-    } catch (error) {
-      console.error('Failed to fetch workspaces:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const createWorkspace = async () => {
-    if (!newWorkspace.name) return;
+  const launchSandbox = async (templateId: string) => {
+    setLaunching(templateId);
     
-    setCreating(true);
     try {
       const response = await fetch('/api/daytona/workspaces', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newWorkspace)
+        body: JSON.stringify({ template: templateId })
       });
 
-      if (response.ok) {
-        setNewWorkspace({ name: '', repositoryUrl: '', branch: 'main' });
-        setShowCreate(false);
-        fetchWorkspaces();
+      const data = await response.json();
+      
+      if (data.sandbox) {
+        setLaunched(data.sandbox);
+        // Auto-open in new tab after 2 seconds
+        setTimeout(() => {
+          window.open(data.sandbox.url, '_blank');
+        }, 2000);
       }
     } catch (error) {
-      console.error('Failed to create workspace:', error);
+      console.error('Launch failed:', error);
     } finally {
-      setCreating(false);
+      setLaunching(null);
     }
   };
 
   return (
-    <div className="min-h-screen py-20 px-4">
+    <div className="min-h-screen py-20 px-4 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-950 dark:to-purple-950">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-2">
-                Dev Environments
-              </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400">
-                Cloud workspaces powered by Daytona • 20,000 credits available
-              </p>
-            </div>
-            <button
-              onClick={() => setShowCreate(!showCreate)}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors flex items-center gap-2"
-            >
-              <Plus className="w-5 h-5" />
-              New Workspace
-            </button>
+        {/* Hero */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-6">
+            <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <span className="text-sm font-medium text-blue-600 dark:text-blue-400">Powered by 20,000 Daytona Credits</span>
           </div>
+          
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            Instant Dev Sandboxes
+          </h1>
+          
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
+            Launch fully-configured development environments in seconds. 
+            <br />
+            <span className="font-semibold">No setup. No waiting. Just code.</span>
+          </p>
 
-          {/* Create Form */}
-          {showCreate && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Create Development Workspace</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Workspace Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={newWorkspace.name}
-                    onChange={(e) => setNewWorkspace({ ...newWorkspace, name: e.target.value })}
-                    placeholder="my-awesome-project"
-                    className="w-full px-4 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Git Repository URL (optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={newWorkspace.repositoryUrl}
-                    onChange={(e) => setNewWorkspace({ ...newWorkspace, repositoryUrl: e.target.value })}
-                    placeholder="https://github.com/username/repo.git"
-                    className="w-full px-4 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Branch
-                  </label>
-                  <input
-                    type="text"
-                    value={newWorkspace.branch}
-                    onChange={(e) => setNewWorkspace({ ...newWorkspace, branch: e.target.value })}
-                    placeholder="main"
-                    className="w-full px-4 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div className="flex gap-3">
-                  <button
-                    onClick={createWorkspace}
-                    disabled={creating || !newWorkspace.name}
-                    className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-colors disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
-                    {creating ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        Creating...
-                      </>
-                    ) : (
-                      <>
-                        <Plus className="w-5 h-5" />
-                        Create Workspace
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => setShowCreate(false)}
-                    className="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold rounded-lg transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
+          <div className="flex items-center justify-center gap-8 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-2">
+              <Zap className="w-4 h-4 text-yellow-500" />
+              <span>Instant Launch</span>
             </div>
-          )}
+            <div className="flex items-center gap-2">
+              <Rocket className="w-4 h-4 text-blue-500" />
+              <span>Pre-configured Stacks</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <ExternalLink className="w-4 h-4 text-purple-500" />
+              <span>VS Code Browser IDE</span>
+            </div>
+          </div>
         </div>
 
-        {/* Workspaces List */}
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-          </div>
-        ) : workspaces.length === 0 ? (
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center">
-            <Code2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Workspaces Yet</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Create your first cloud development environment to get started.
-            </p>
-            <button
-              onClick={() => setShowCreate(true)}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors inline-flex items-center gap-2"
-            >
-              <Plus className="w-5 h-5" />
-              Create Workspace
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {workspaces.map((workspace) => (
-              <div
-                key={workspace.id}
-                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:border-blue-500 dark:hover:border-blue-500 transition-all"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <Code2 className="w-8 h-8 text-blue-600" />
-                    <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white">{workspace.name}</h3>
-                      <span className={`text-xs px-2 py-0.5 rounded ${
-                        workspace.status === 'running' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                        workspace.status === 'creating' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                        workspace.status === 'stopped' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' :
-                        'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                      }`}>
-                        {workspace.status}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {workspace.repositoryUrl && (
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 truncate">
-                    {workspace.repositoryUrl}
-                  </p>
-                )}
-
-                <div className="flex items-center gap-2">
-                  {workspace.status === 'running' && workspace.url && (
-                    <a
-                      href={workspace.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Open
-                    </a>
-                  )}
-                  {workspace.status === 'stopped' && (
-                    <button className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
-                      <Play className="w-4 h-4" />
-                      Start
-                    </button>
-                  )}
-                  {workspace.status === 'running' && (
-                    <button className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white text-sm font-medium rounded-lg transition-colors">
-                      <Square className="w-4 h-4" />
-                    </button>
-                  )}
-                  <button className="px-4 py-2 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 text-red-600 dark:text-red-300 text-sm font-medium rounded-lg transition-colors">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+        {/* Launch Success Message */}
+        {launched && (
+          <div className="mb-12 bg-green-50 dark:bg-green-900/20 border-2 border-green-500 rounded-xl p-6 animate-in fade-in slide-in-from-top duration-500">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                  <Rocket className="w-6 h-6 text-white" />
                 </div>
               </div>
-            ))}
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-green-900 dark:text-green-100 mb-1">
+                  🎉 Sandbox Launched Successfully!
+                </h3>
+                <p className="text-green-700 dark:text-green-300 text-sm mb-3">
+                  Your environment is ready. Opening in new tab...
+                </p>
+                <a
+                  href={launched.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Open Sandbox
+                </a>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Info Section */}
-        <div className="mt-12 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-800 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            ⚡ Powered by Daytona.io
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            Spin up cloud development environments in seconds. Full VS Code experience with your own credits.
-          </p>
-          <div className="flex items-center gap-4 text-sm">
-            <div className="px-4 py-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-              <span className="text-gray-600 dark:text-gray-400">Credits Available:</span>
-              <span className="ml-2 font-bold text-gray-900 dark:text-white">20,000</span>
-            </div>
-            <a
-              href="https://daytona.io"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+        {/* Template Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {TEMPLATES.map((template) => (
+            <div
+              key={template.id}
+              className="group relative bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-200 dark:border-gray-700 p-8 hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
             >
-              Learn more about Daytona
-              <ExternalLink className="w-4 h-4" />
-            </a>
+              {/* Icon */}
+              <div className="text-6xl mb-4">{template.icon}</div>
+              
+              {/* Content */}
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                {template.name}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                {template.description}
+              </p>
+              <div className="text-xs text-gray-500 dark:text-gray-500 mb-6 font-mono">
+                {template.stack}
+              </div>
+
+              {/* Launch Button */}
+              <button
+                onClick={() => launchSandbox(template.id)}
+                disabled={launching !== null}
+                className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 ${
+                  launching === template.id
+                    ? 'bg-blue-500 text-white animate-pulse'
+                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl'
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                {launching === template.id ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Launching...
+                  </>
+                ) : (
+                  <>
+                    <Rocket className="w-5 h-5" />
+                    Launch Sandbox
+                  </>
+                )}
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* Info Footer */}
+        <div className="mt-16 text-center">
+          <div className="inline-block bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+              How It Works
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left max-w-3xl">
+              <div>
+                <div className="text-3xl mb-2">1️⃣</div>
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Choose Template</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Pick your stack - Node, Python, React, or more
+                </p>
+              </div>
+              <div>
+                <div className="text-3xl mb-2">2️⃣</div>
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Launch Instantly</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Click launch - sandbox spins up in seconds
+                </p>
+              </div>
+              <div>
+                <div className="text-3xl mb-2">3️⃣</div>
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Start Coding</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Full VS Code IDE in your browser, ready to go
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

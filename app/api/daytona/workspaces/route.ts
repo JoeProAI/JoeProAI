@@ -1,32 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { listWorkspaces, createWorkspace } from '@/lib/llm/daytona-client';
+import { createInstantSandbox, SANDBOX_TEMPLATES } from '@/lib/llm/daytona-client';
 
 export async function GET() {
-  try {
-    const workspaces = await listWorkspaces();
-    return NextResponse.json({ workspaces });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+  // Return available templates
+  return NextResponse.json({ templates: SANDBOX_TEMPLATES });
 }
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, repositoryUrl, branch, image } = body;
+    const { template, name, repositoryUrl } = body;
 
-    if (!name) {
-      return NextResponse.json({ error: 'Workspace name is required' }, { status: 400 });
+    if (!template) {
+      return NextResponse.json({ error: 'Template is required' }, { status: 400 });
     }
 
-    const workspace = await createWorkspace({
+    const sandbox = await createInstantSandbox({
+      template,
       name,
-      repositoryUrl,
-      branch,
-      image
+      repositoryUrl
     });
 
-    return NextResponse.json({ workspace });
+    return NextResponse.json({ sandbox });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
