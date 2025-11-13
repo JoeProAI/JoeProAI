@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, Brain, Rss } from 'lucide-react';
 
 export default function Hero() {
   return (
@@ -13,9 +12,8 @@ export default function Hero() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 text-sm font-medium"
+          className="inline-flex items-center px-4 py-2 glass mb-8 text-sm font-medium"
         >
-          <Sparkles className="w-4 h-4 text-primary" />
           <span className="text-secondary dark:text-slate-300">AI-Powered Platform</span>
         </motion.div>
 
@@ -48,23 +46,20 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <Link href="/apps" className="w-full sm:w-auto">
-            <button className="w-full sm:w-auto group px-8 py-4 bg-primary hover:bg-blue-700 text-white rounded-xl font-medium transition-all hover:shadow-lg flex items-center justify-center gap-2">
+          <Link href="/apps/chat" className="w-full sm:w-auto">
+            <button className="w-full sm:w-auto px-10 py-4 bg-primary hover:bg-blue-700 text-white font-medium transition-all hover:shadow-lg">
               Get Started
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </Link>
 
           <Link href="/agents" className="w-full sm:w-auto">
-            <button className="w-full sm:w-auto group px-8 py-4 glass card-border hover:card-border-hover rounded-xl font-medium transition-all flex items-center justify-center gap-2">
-              <Brain className="w-5 h-5" />
+            <button className="w-full sm:w-auto px-10 py-4 glass card-border hover:card-border-hover font-medium transition-all">
               AI Agents
             </button>
           </Link>
 
           <Link href="/feeds" className="w-full sm:w-auto">
-            <button className="w-full sm:w-auto group px-8 py-4 glass card-border hover:card-border-hover rounded-xl font-medium transition-all flex items-center justify-center gap-2">
-              <Rss className="w-5 h-5" />
+            <button className="w-full sm:w-auto px-10 py-4 glass card-border hover:card-border-hover font-medium transition-all">
               Tech Feeds
             </button>
           </Link>

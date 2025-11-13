@@ -219,8 +219,8 @@ export default function NeuralNetCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 -z-10 bg-cyber-darker"
-      style={{ width: '100vw', height: '100vh' }}
+      className="fixed inset-0 -z-10"
+      style={{ width: '100vw', height: '100vh', background: isDark ? '#0f172a' : '#ffffff' }}
     />
   );
 }
