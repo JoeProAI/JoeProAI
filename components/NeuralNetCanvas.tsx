@@ -98,8 +98,8 @@ export default function NeuralNetCanvas() {
     if (!ctx) return;
 
     const animate = () => {
-      // Subtle background clear
-      ctx.fillStyle = isDark ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.08)';
+      // Clear with semi-transparent background (trail effect)
+      ctx.fillStyle = isDark ? 'rgba(15, 23, 42, 0.3)' : 'rgba(255, 255, 255, 0.3)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Update and draw nodes
