@@ -152,7 +152,7 @@ export default function ChatPage() {
           <button
             onClick={sendMessage}
             disabled={loading || !input.trim()}
-            className="px-6 bg-primary hover:bg-blue-700 text-white font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-6 bg-primary hover:bg-blue-700 text-white font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 clip-corners"
           >
             <Send className="w-5 h-5" />
           </button>

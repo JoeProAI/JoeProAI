@@ -22,7 +22,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
+          className="text-6xl md:text-8xl font-black mb-6 leading-tight tracking-tight"
         >
           <span className="text-gradient">JoePro</span>
           <span className="text-foreground">.ai</span>
@@ -33,10 +33,18 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg md:text-xl text-secondary dark:text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed"
+          className="text-xl md:text-2xl text-secondary dark:text-slate-300 mb-4 max-w-3xl mx-auto leading-relaxed font-medium"
         >
-          Build smarter with AI. Access OpenAI and xAI models, create custom agents, 
-          and stay updated with real-time tech feeds.
+          Premium AI Platform for Professionals
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="text-base md:text-lg text-secondary dark:text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed"
+        >
+          Harness GPT-4, Grok, and custom AI agents with vision & analytics.
+          <br />Built for developers, creators, and innovators who demand excellence.
         </motion.p>
 
         {/* CTA Buttons */}
@@ -47,19 +55,19 @@ export default function Hero() {
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
           <Link href="/apps/chat" className="w-full sm:w-auto">
-            <button className="w-full sm:w-auto px-10 py-4 bg-primary hover:bg-blue-700 text-white font-medium transition-all hover:shadow-lg">
+            <button className="w-full sm:w-auto px-10 py-4 bg-primary hover:bg-blue-700 text-white font-bold transition-all hover:shadow-lg clip-corners text-lg">
               Get Started
             </button>
           </Link>
 
           <Link href="/agents" className="w-full sm:w-auto">
-            <button className="w-full sm:w-auto px-10 py-4 glass card-border hover:card-border-hover font-medium transition-all">
+            <button className="w-full sm:w-auto px-10 py-4 glass card-border hover:card-border-hover font-bold transition-all clip-corners text-lg">
               AI Agents
             </button>
           </Link>
 
           <Link href="/feeds" className="w-full sm:w-auto">
-            <button className="w-full sm:w-auto px-10 py-4 glass card-border hover:card-border-hover font-medium transition-all">
+            <button className="w-full sm:w-auto px-10 py-4 glass card-border hover:card-border-hover font-bold transition-all clip-corners text-lg">
               Tech Feeds
             </button>
           </Link>
