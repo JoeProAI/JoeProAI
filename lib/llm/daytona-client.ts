@@ -1,4 +1,13 @@
 // Daytona.io - Instant Dev Sandboxes
+// REAL Implementation Guide: See DAYTONA_IMPLEMENTATION.md
+
+// To use real Daytona SDK:
+// 1. npm install @daytonaio/sdk
+// 2. Create snapshots in dashboard for each template
+// 3. Uncomment the SDK import below
+// 4. Use the real launchSandbox function
+
+// import { Daytona } from '@daytonaio/sdk';
 
 export interface SandboxTemplate {
   id: string;
@@ -6,7 +15,7 @@ export interface SandboxTemplate {
   description: string;
   icon: string;
   stack: string;
-  repositoryUrl?: string;
+  snapshotName: string; // Actual snapshot name in Daytona dashboard
 }
 
 export interface CreateSandboxRequest {
@@ -18,11 +27,13 @@ export interface CreateSandboxRequest {
 export interface Sandbox {
   id: string;
   url: string;
+  token?: string; // Auth token for preview URL
   template: string;
   createdAt: string;
 }
 
 // Pre-configured sandbox templates
+// Create these snapshots in your Daytona dashboard first!
 export const SANDBOX_TEMPLATES: SandboxTemplate[] = [
   {
     id: 'node',
@@ -30,6 +41,7 @@ export const SANDBOX_TEMPLATES: SandboxTemplate[] = [
     description: 'Node.js + npm/yarn',
     icon: '🟢',
     stack: 'node:20-alpine',
+    snapshotName: 'daytona-small', // Create this snapshot in dashboard
   },
   {
     id: 'python',
@@ -37,6 +49,7 @@ export const SANDBOX_TEMPLATES: SandboxTemplate[] = [
     description: 'Python 3.11 + pip',
     icon: '🐍',
     stack: 'python:3.11-slim',
+    snapshotName: 'daytona-small',
   },
   {
     id: 'react',
@@ -44,7 +57,7 @@ export const SANDBOX_TEMPLATES: SandboxTemplate[] = [
     description: 'React + Vite + TypeScript',
     icon: '⚛️',
     stack: 'node:20',
-    repositoryUrl: 'https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts',
+    snapshotName: 'daytona-medium',
   },
   {
     id: 'nextjs',
@@ -52,7 +65,7 @@ export const SANDBOX_TEMPLATES: SandboxTemplate[] = [
     description: 'Next.js 14 + App Router',
     icon: '▲',
     stack: 'node:20',
-    repositoryUrl: 'https://github.com/vercel/next.js/tree/canary/examples/hello-world',
+    snapshotName: 'daytona-medium',
   },
   {
     id: 'fullstack',
@@ -60,6 +73,7 @@ export const SANDBOX_TEMPLATES: SandboxTemplate[] = [
     description: 'Node + PostgreSQL + Redis',
     icon: '🚀',
     stack: 'node:20',
+    snapshotName: 'daytona-large',
   },
   {
     id: 'ai',
@@ -67,10 +81,16 @@ export const SANDBOX_TEMPLATES: SandboxTemplate[] = [
     description: 'Python + Jupyter + TensorFlow',
     icon: '🤖',
     stack: 'python:3.11',
+    snapshotName: 'joepro-ai',
   },
 ];
 
-// Generate instant sandbox URL using Daytona credits
+// REAL SDK Implementation (uncomment after setup):
+/*
+const daytonaClient = new Daytona({
+  apiKey: process.env.DAYTONA_TOKEN!
+});
+
 export async function createInstantSandbox(request: CreateSandboxRequest): Promise<Sandbox> {
   const template = SANDBOX_TEMPLATES.find(t => t.id === request.template);
   
@@ -78,13 +98,41 @@ export async function createInstantSandbox(request: CreateSandboxRequest): Promi
     throw new Error('Invalid template');
   }
 
-  // Simulate sandbox creation
-  // In production, this would call Daytona API with your credits
+  // Create sandbox from pre-configured snapshot
+  const sandbox = await daytonaClient.create({
+    snapshot: template.snapshotName,
+    name: request.name || `joepro-${request.template}-${Date.now()}`,
+    public: true, // Anyone with link can access (no auth needed)
+  });
+
+  // Get preview URL for VS Code IDE (port 3000 is common)
+  const preview = await sandbox.getPreviewUrl(3000);
+  
+  return {
+    id: sandbox.id,
+    url: preview.url, // Real Daytona URL: https://3000-sandbox-xxx.proxy.daytona.work
+    token: preview.token, // Auth token (not needed if public=true)
+    template: request.template,
+    createdAt: new Date().toISOString(),
+  };
+}
+*/
+
+// DEMO Implementation (for testing UI without SDK)
+export async function createInstantSandbox(request: CreateSandboxRequest): Promise<Sandbox> {
+  const template = SANDBOX_TEMPLATES.find(t => t.id === request.template);
+  
+  if (!template) {
+    throw new Error('Invalid template');
+  }
+
+  // Simulate sandbox creation for demo purposes
   const sandboxId = `sandbox-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   
   return {
     id: sandboxId,
-    url: `https://${sandboxId}.daytona.dev`,
+    url: `https://3000-${sandboxId}.proxy.daytona.work`,
+    token: 'demo-token-' + Math.random().toString(36),
     template: request.template,
     createdAt: new Date().toISOString(),
   };
