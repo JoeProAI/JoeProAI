@@ -7,7 +7,7 @@
 // 3. Uncomment the SDK import below
 // 4. Use the real launchSandbox function
 
-// import { Daytona } from '@daytonaio/sdk';
+import { Daytona } from '@daytonaio/sdk';
 
 export interface SandboxTemplate {
   id: string;
@@ -81,12 +81,11 @@ export const SANDBOX_TEMPLATES: SandboxTemplate[] = [
     description: 'Python + Jupyter + TensorFlow',
     icon: '🤖',
     stack: 'python:3.11',
-    snapshotName: 'joepro-ai',
+    snapshotName: 'daytona-large',
   },
 ];
 
-// REAL SDK Implementation (uncomment after setup):
-/*
+// REAL SDK Implementation - ACTIVE
 const daytonaClient = new Daytona({
   apiKey: process.env.DAYTONA_TOKEN!
 });
@@ -112,27 +111,6 @@ export async function createInstantSandbox(request: CreateSandboxRequest): Promi
     id: sandbox.id,
     url: preview.url, // Real Daytona URL: https://3000-sandbox-xxx.proxy.daytona.work
     token: preview.token, // Auth token (not needed if public=true)
-    template: request.template,
-    createdAt: new Date().toISOString(),
-  };
-}
-*/
-
-// DEMO Implementation (for testing UI without SDK)
-export async function createInstantSandbox(request: CreateSandboxRequest): Promise<Sandbox> {
-  const template = SANDBOX_TEMPLATES.find(t => t.id === request.template);
-  
-  if (!template) {
-    throw new Error('Invalid template');
-  }
-
-  // Simulate sandbox creation for demo purposes
-  const sandboxId = `sandbox-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  
-  return {
-    id: sandboxId,
-    url: `https://3000-${sandboxId}.proxy.daytona.work`,
-    token: 'demo-token-' + Math.random().toString(36),
     template: request.template,
     createdAt: new Date().toISOString(),
   };
