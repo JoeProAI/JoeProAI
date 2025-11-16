@@ -66,9 +66,11 @@ const TEMPLATES: SandboxTemplate[] = [
 export default function SandboxLauncher() {
   const [launching, setLaunching] = useState<string | null>(null);
   const [launched, setLaunched] = useState<LaunchedSandbox | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const launchSandbox = async (templateId: string) => {
     setLaunching(templateId);
+    setError(null);
     
     try {
       const response = await fetch('/api/daytona/workspaces', {
@@ -79,6 +81,12 @@ export default function SandboxLauncher() {
 
       const data = await response.json();
       
+      if (data.error) {
+        setError(data.error);
+        console.error('API Error:', data);
+        return;
+      }
+      
       if (data.sandbox) {
         setLaunched(data.sandbox);
         // Auto-open in new tab after 2 seconds
@@ -87,6 +95,8 @@ export default function SandboxLauncher() {
         }, 2000);
       }
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      setError(errorMsg);
       console.error('Launch failed:', error);
     } finally {
       setLaunching(null);
@@ -128,6 +138,33 @@ export default function SandboxLauncher() {
             </div>
           </div>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-12 bg-red-50 dark:bg-red-900/20 border-2 border-red-500 rounded-xl p-6 animate-in fade-in slide-in-from-top duration-500">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-2xl">⚠️</span>
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-red-900 dark:text-red-100 mb-1">
+                  Launch Failed
+                </h3>
+                <p className="text-red-700 dark:text-red-300 text-sm mb-3">
+                  {error}
+                </p>
+                <button
+                  onClick={() => setError(null)}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors"
+                >
+                  Dismiss
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Launch Success Message */}
         {launched && (

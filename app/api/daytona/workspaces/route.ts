@@ -15,14 +15,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Template is required' }, { status: 400 });
     }
 
+    console.log('[Daytona] Creating sandbox:', { template, name });
+    
     const sandbox = await createInstantSandbox({
       template,
       name,
       repositoryUrl
     });
 
+    console.log('[Daytona] Sandbox created:', sandbox.id);
+    
     return NextResponse.json({ sandbox });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('[Daytona] Error creating sandbox:', {
+      message: error.message,
+      stack: error.stack,
+      details: error.toString()
+    });
+    
+    return NextResponse.json({ 
+      error: error.message || 'Failed to create sandbox',
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    }, { status: 500 });
   }
 }
