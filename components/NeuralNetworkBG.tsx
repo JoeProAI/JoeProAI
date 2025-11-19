@@ -96,12 +96,12 @@ export default function NeuralNetworkBG() {
               return (
                 <line
                   key={`${i}-${j}`}
-                  x1={`${node.x}%`}
-                  y1={`${node.y}%`}
-                  x2={`${otherNode.x}%`}
-                  y2={`${otherNode.y}%`}
+                  x1={node.x}
+                  y1={node.y}
+                  x2={otherNode.x}
+                  y2={otherNode.y}
                   stroke="url(#connectionGradient)"
-                  strokeWidth="4"
+                  strokeWidth="0.3"
                   opacity={opacity}
                   filter="url(#glow)"
                 />
@@ -124,11 +124,11 @@ export default function NeuralNetworkBG() {
           const glowFilter = isNearMouse ? 'url(#cyanGlow)' : 'url(#glow)';
 
           return (
-            <g key={node.id} transform={`translate(${node.x}%, ${node.y}%)`}>
+            <g key={node.id}>
               {/* Outer glow ring */}
               <circle
-                cx="0"
-                cy="0"
+                cx={node.x}
+                cy={node.y}
                 r={node.size * 4 * scale}
                 fill="url(#nodeGradient)"
                 opacity="0.7"
@@ -136,20 +136,20 @@ export default function NeuralNetworkBG() {
               
               {/* Main node */}
               <circle
-                cx="0"
-                cy="0"
+                cx={node.x}
+                cy={node.y}
                 r={node.size * scale}
                 fill="#00d4ff"
                 stroke="#0066ff"
-                strokeWidth="3"
+                strokeWidth="0.5"
                 filter={glowFilter}
                 opacity="1"
               />
               
               {/* Core highlight */}
               <circle
-                cx="-0.5"
-                cy="-0.5"
+                cx={node.x - 0.5}
+                cy={node.y - 0.5}
                 r={node.size * 0.4 * scale}
                 fill="#ffffff"
                 opacity="0.6"
@@ -159,31 +159,31 @@ export default function NeuralNetworkBG() {
         })}
 
         {/* Animated scan lines */}
-        <g opacity="0.2">
-          <line x1="0%" y1="20%" x2="100%" y2="20%" stroke="#00d4ff" strokeWidth="1">
+        <g opacity="0.3">
+          <line x1="0" y1="20" x2="100" y2="20" stroke="#00d4ff" strokeWidth="0.1">
             <animate
               attributeName="y1"
-              values="20%;80%;20%"
+              values="20;80;20"
               dur="8s"
               repeatCount="indefinite"
             />
             <animate
               attributeName="y2"
-              values="20%;80%;20%"
+              values="20;80;20"
               dur="8s"
               repeatCount="indefinite"
             />
           </line>
-          <line x1="0%" y1="50%" x2="100%" y2="50%" stroke="#0066ff" strokeWidth="1">
+          <line x1="0" y1="50" x2="100" y2="50" stroke="#0066ff" strokeWidth="0.1">
             <animate
               attributeName="y1"
-              values="50%;10%;50%"
+              values="50;10;50"
               dur="12s"
               repeatCount="indefinite"
             />
             <animate
               attributeName="y2"
-              values="50%;10%;50%"
+              values="50;10;50"
               dur="12s"
               repeatCount="indefinite"
             />
