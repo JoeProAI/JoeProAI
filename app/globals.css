@@ -196,3 +196,56 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--primary);
   color: #fff;
 }
+
+/* Pure CSS Neural Network - NO REACT, NO JS */
+.neural-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background: linear-gradient(135deg, #001030 0%, #000510 100%);
+  overflow: hidden;
+}
+
+.neural-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #00d4ff;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #00d4ff;
+  animation: float 20s infinite ease-in-out;
+}
+
+.neural-dot:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+.neural-dot:nth-child(2) { left: 20%; top: 40%; animation-delay: -2s; }
+.neural-dot:nth-child(3) { left: 30%; top: 60%; animation-delay: -4s; }
+.neural-dot:nth-child(4) { left: 40%; top: 30%; animation-delay: -6s; }
+.neural-dot:nth-child(5) { left: 50%; top: 50%; animation-delay: -8s; }
+.neural-dot:nth-child(6) { left: 60%; top: 70%; animation-delay: -10s; }
+.neural-dot:nth-child(7) { left: 70%; top: 25%; animation-delay: -12s; }
+.neural-dot:nth-child(8) { left: 80%; top: 45%; animation-delay: -14s; }
+.neural-dot:nth-child(9) { left: 90%; top: 65%; animation-delay: -16s; }
+.neural-dot:nth-child(10) { left: 15%; top: 80%; animation-delay: -18s; }
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(10px, -10px) scale(1.2); }
+  50% { transform: translate(-10px, 10px) scale(0.8); }
+  75% { transform: translate(10px, 10px) scale(1.1); }
+}
+
+/* Scan lines */
+.neural-scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+  opacity: 0.3;
+  animation: scan 8s linear infinite;
+}
+
+@keyframes scan {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
