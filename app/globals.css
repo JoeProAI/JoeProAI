@@ -3,21 +3,24 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #111827;
-  --primary: #2563eb;
-  --secondary: #6b7280;
+  --background: #fafafa;
+  --foreground: #0a0a0a;
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --secondary: #64748b;
   --accent: #3b82f6;
   --border: #e5e7eb;
   --card-bg: #ffffff;
+  --text-muted: #64748b;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0f172a;
+    --background: #0a0a14;
     --foreground: #f8fafc;
-    --card-bg: #1e293b;
-    --border: #334155;
+    --card-bg: #151521;
+    --border: #27273a;
+    --text-muted: #94a3b8;
   }
 }
 
@@ -36,11 +39,11 @@ body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv11', 'ss01';
+  letter-spacing: -0.011em;
 }
 
 /* Clean Scrollbar */
@@ -72,6 +75,38 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Refined Button Styles */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
+}
+
+.btn-secondary {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--foreground);
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
 }
 
 /* Subtle Grid Background */
@@ -127,11 +162,11 @@ body {
 
 /* Selection */
 ::selection {
-  background: var(--neon-cyan);
-  color: #000;
+  background: var(--primary);
+  color: #fff;
 }
 
 ::-moz-selection {
-  background: var(--neon-cyan);
-  color: #000;
+  background: var(--primary);
+  color: #fff;
 }

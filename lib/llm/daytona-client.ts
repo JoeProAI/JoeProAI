@@ -105,7 +105,7 @@ export async function createInstantSandbox(request: CreateSandboxRequest): Promi
   });
 
   // Get preview URL for VS Code IDE (port 3000 is common)
-  const preview = await sandbox.getPreviewUrl(3000);
+  const preview = await sandbox.getPreviewLink(3000);
   
   return {
     id: sandbox.id,
