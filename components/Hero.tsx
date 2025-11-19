@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Zap, TrendingUp, Database, BarChart3 } from 'lucide-react';
 
 export default function Hero() {
   return (
@@ -10,71 +10,85 @@ export default function Hero() {
       <div className="max-w-5xl mx-auto text-center">
         {/* Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--border)] bg-[var(--card-bg)] mb-8"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--primary)] bg-[var(--card-bg)] mb-8 relative overflow-hidden"
         >
-          <Sparkles className="w-3.5 h-3.5 text-[var(--primary)]" />
-          <span className="text-sm font-medium text-[var(--text-muted)]">Professional AI Platform</span>
+          <motion.div 
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent opacity-20"
+            animate={{ x: ['-100%', '200%'] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          />
+          <Zap className="w-3.5 h-3.5 text-[var(--primary)] relative z-10" />
+          <span className="text-sm font-semibold text-foreground relative z-10">AI-Powered Acceleration</span>
         </motion.div>
 
         {/* Main Headline */}
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-6xl md:text-7xl lg:text-8xl font-extrabold mb-6 leading-[1.1] tracking-[-0.03em] text-balance"
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
+          className="text-6xl md:text-7xl lg:text-8xl font-black mb-6 leading-[1.05] tracking-[-0.04em] text-balance relative"
         >
-          <span className="text-foreground">
-            Build Faster
+          <span className="text-foreground inline-block">
+            Accelerate Everything
           </span>
           <br />
-          <span className="text-gradient">
-            with AI Agents
+          <span className="text-gradient inline-block relative">
+            Ship Faster
+            <motion.div
+              className="absolute -right-2 top-0 text-[var(--primary)] opacity-60"
+              animate={{ x: [0, 8, 0], opacity: [0.4, 1, 0.4] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              <ArrowRight className="w-12 h-12 md:w-16 md:h-16" />
+            </motion.div>
           </span>
         </motion.h1>
 
         {/* Subheadline */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
           className="text-lg md:text-xl text-[var(--text-muted)] mb-12 max-w-2xl mx-auto leading-relaxed font-medium"
         >
-          Intelligent agents, analytics, and cloud development environments for modern teams.
+          AI agents, live analytics, and instant cloud environments. <br className="hidden md:block" />
+          <span className="text-foreground font-semibold">Zero configuration. Maximum velocity.</span>
         </motion.p>
 
         {/* CTA Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20"
         >
           <a
             href="https://calendly.com/joepro-ai"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto group"
           >
             <motion.button
-              whileHover={{ y: -1 }}
+              whileHover={{ x: 2 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full sm:w-auto px-8 py-4 btn-primary flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-4 btn-primary flex items-center justify-center gap-2 relative overflow-hidden"
             >
-              Book Consultation
-              <ArrowRight className="w-4 h-4" />
+              <span className="relative z-10">Start Building</span>
+              <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
             </motion.button>
           </a>
 
-          <Link href="/agents" className="w-full sm:w-auto">
+          <Link href="/devenv" className="w-full sm:w-auto">
             <motion.button
-              whileHover={{ y: -1 }}
+              whileHover={{ x: 2 }}
               whileTap={{ scale: 0.98 }}
               className="w-full sm:w-auto px-8 py-4 btn-secondary flex items-center justify-center gap-2"
             >
-              Try AI Agents
+              Launch Sandbox
+              <Zap className="w-4 h-4" />
             </motion.button>
           </Link>
         </motion.div>
@@ -87,9 +101,9 @@ export default function Hero() {
           className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
         >
           {[
-            { name: 'Followlytics', url: 'https://followlytics.joepro.ai', desc: 'Social analytics & insights', icon: '📊' },
-            { name: 'StakeSmith', url: 'https://stakesmith.joepro.ai', desc: 'AI investment analysis', icon: '💎' },
-            { name: 'Neural Salvage', url: 'https://neuralsalvage.joepro.ai', desc: 'Data recovery tools', icon: '🔧' }
+            { name: 'Followlytics', url: 'https://followlytics.joepro.ai', desc: 'Real-time social analytics', Icon: BarChart3 },
+            { name: 'StakeSmith', url: 'https://stakesmith.joepro.ai', desc: 'AI investment insights', Icon: TrendingUp },
+            { name: 'Neural Salvage', url: 'https://neuralsalvage.joepro.ai', desc: 'Data recovery platform', Icon: Database }
           ].map((service, i) => (
             <motion.a
               key={i}
@@ -102,13 +116,26 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.6 + i * 0.1 }}
               whileHover={{ y: -4 }}
             >
-              <div className="p-6 rounded-xl border border-[var(--border)] bg-[var(--card-bg)] transition-all duration-200 hover:border-[var(--primary)] hover:shadow-lg relative overflow-hidden">
-                <div className="text-3xl mb-3">{service.icon}</div>
-                <h3 className="text-lg font-semibold text-foreground mb-2 flex items-center justify-between">
-                  {service.name}
-                  <ArrowRight className="w-4 h-4 text-[var(--primary)] opacity-0 group-hover:opacity-100 transition-opacity" />
-                </h3>
-                <p className="text-sm text-[var(--text-muted)]">{service.desc}</p>
+              <div className="p-6 rounded-xl border border-[var(--border)] bg-[var(--card-bg)] transition-all duration-300 hover:border-[var(--primary)] hover:shadow-lg relative overflow-hidden group-hover:translate-x-1">
+                {/* Animated gradient on hover */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent opacity-0 group-hover:opacity-10"
+                  animate={{ x: ['-100%', '200%'] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                />
+                <div className="relative z-10">
+                  <service.Icon className="w-8 h-8 mb-4 text-[var(--primary)]" strokeWidth={1.5} />
+                  <h3 className="text-lg font-bold text-foreground mb-2 flex items-center justify-between">
+                    {service.name}
+                    <motion.div
+                      initial={{ x: -4, opacity: 0 }}
+                      whileHover={{ x: 0, opacity: 1 }}
+                    >
+                      <ArrowRight className="w-4 h-4 text-[var(--primary)]" />
+                    </motion.div>
+                  </h3>
+                  <p className="text-sm text-[var(--text-muted)] font-medium">{service.desc}</p>
+                </div>
               </div>
             </motion.a>
           ))}
