@@ -3,14 +3,14 @@
 import { useEffect, useState } from 'react';
 
 // Fixed node positions (deterministic, no random on render)
-const FIXED_NODES = Array.from({ length: 40 }, (_, i) => {
+const FIXED_NODES = Array.from({ length: 25 }, (_, i) => {
   // Use index-based seed for consistent positions
   const seed = i * 123.456;
   return {
     id: i,
     x: ((seed * 9301 + 49297) % 233280) / 2332.8,
     y: ((seed * 4253 + 15731) % 233280) / 2332.8,
-    size: 3 + ((seed * 7919) % 30) / 10,
+    size: 15 + ((seed * 7919) % 30) / 5,  // Much bigger: 15-21px
   };
 });
 
@@ -39,11 +39,14 @@ export default function NeuralNetworkBG() {
   }
 
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden">
+    <div className="fixed inset-0 -z-10 overflow-hidden" style={{ 
+      background: 'linear-gradient(135deg, #000510 0%, #001030 100%)'
+    }}>
       <svg
         className="w-full h-full"
         xmlns="http://www.w3.org/2000/svg"
-        style={{ background: 'transparent' }}
+        preserveAspectRatio="xMidYMid slice"
+        viewBox="0 0 100 100"
       >
         <defs>
           {/* Blue glow filter */}
@@ -87,8 +90,8 @@ export default function NeuralNetworkBG() {
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             // Only draw if nodes are close enough
-            if (distance < 25) {
-              const opacity = (1 - distance / 25) * 0.6;
+            if (distance < 30) {
+              const opacity = (1 - distance / 30) * 0.9;
               
               return (
                 <line
@@ -98,7 +101,7 @@ export default function NeuralNetworkBG() {
                   x2={`${otherNode.x}%`}
                   y2={`${otherNode.y}%`}
                   stroke="url(#connectionGradient)"
-                  strokeWidth="2"
+                  strokeWidth="4"
                   opacity={opacity}
                   filter="url(#glow)"
                 />
@@ -116,8 +119,8 @@ export default function NeuralNetworkBG() {
           const distFromMouse = Math.sqrt(dx * dx + dy * dy);
           
           // Scale based on mouse proximity
-          const isNearMouse = distFromMouse < 20;
-          const scale = isNearMouse ? 1.5 : 1;
+          const isNearMouse = distFromMouse < 25;
+          const scale = isNearMouse ? 2 : 1;
           const glowFilter = isNearMouse ? 'url(#cyanGlow)' : 'url(#glow)';
 
           return (
@@ -126,9 +129,9 @@ export default function NeuralNetworkBG() {
               <circle
                 cx="0"
                 cy="0"
-                r={node.size * 3 * scale}
+                r={node.size * 4 * scale}
                 fill="url(#nodeGradient)"
-                opacity="0.4"
+                opacity="0.7"
               />
               
               {/* Main node */}
@@ -138,9 +141,9 @@ export default function NeuralNetworkBG() {
                 r={node.size * scale}
                 fill="#00d4ff"
                 stroke="#0066ff"
-                strokeWidth="1"
+                strokeWidth="3"
                 filter={glowFilter}
-                opacity="0.95"
+                opacity="1"
               />
               
               {/* Core highlight */}
@@ -156,7 +159,7 @@ export default function NeuralNetworkBG() {
         })}
 
         {/* Animated scan lines */}
-        <g opacity="0.1">
+        <g opacity="0.2">
           <line x1="0%" y1="20%" x2="100%" y2="20%" stroke="#00d4ff" strokeWidth="1">
             <animate
               attributeName="y1"
