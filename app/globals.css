@@ -208,12 +208,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .neural-dot {
   position: absolute;
-  width: 8px;
-  height: 8px;
-  background: #00d4ff;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, #00d4ff 0%, #0066ff 50%, transparent 100%);
   border-radius: 50%;
-  box-shadow: 0 0 20px #00d4ff;
+  box-shadow: 0 0 60px #00d4ff, 0 0 100px rgba(0, 212, 255, 0.5);
   animation: float 20s infinite ease-in-out;
+  opacity: 0.8;
 }
 
 .neural-dot:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }

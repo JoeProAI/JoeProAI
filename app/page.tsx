@@ -15,6 +15,16 @@ export default function Home() {
         <div className="neural-dot"></div>
         <div className="neural-dot"></div>
         <div className="neural-dot"></div>
+        <div className="neural-dot"></div>
+        <div className="neural-dot"></div>
+        <div className="neural-dot"></div>
+        <div className="neural-dot"></div>
+        <div className="neural-dot"></div>
+        <div className="neural-dot"></div>
+        <div className="neural-dot"></div>
+        <div className="neural-dot"></div>
+        <div className="neural-dot"></div>
+        <div className="neural-dot"></div>
         <div className="neural-scan"></div>
       </div>
       
