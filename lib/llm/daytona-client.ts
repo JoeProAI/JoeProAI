@@ -9,6 +9,20 @@
 
 import { Daytona } from '@daytonaio/sdk';
 
+// Lazy initialize Daytona client to avoid build-time errors
+let daytonaClient: Daytona | null = null;
+
+function getDaytonaClient(): Daytona {
+  if (!daytonaClient) {
+    const apiKey = process.env.DAYTONA_TOKEN;
+    if (!apiKey) {
+      throw new Error('DAYTONA_TOKEN environment variable is not set');
+    }
+    daytonaClient = new Daytona({ apiKey });
+  }
+  return daytonaClient;
+}
+
 export interface SandboxTemplate {
   id: string;
   name: string;
@@ -86,10 +100,6 @@ export const SANDBOX_TEMPLATES: SandboxTemplate[] = [
 ];
 
 // REAL SDK Implementation - ACTIVE
-const daytonaClient = new Daytona({
-  apiKey: process.env.DAYTONA_TOKEN!
-});
-
 export async function createInstantSandbox(request: CreateSandboxRequest): Promise<Sandbox> {
   const template = SANDBOX_TEMPLATES.find(t => t.id === request.template);
   
@@ -97,8 +107,11 @@ export async function createInstantSandbox(request: CreateSandboxRequest): Promi
     throw new Error('Invalid template');
   }
 
+  // Get lazy-loaded client
+  const client = getDaytonaClient();
+
   // Create sandbox from pre-configured snapshot
-  const sandbox = await daytonaClient.create({
+  const sandbox = await client.create({
     snapshot: template.snapshotName,
     name: request.name || `joepro-${request.template}-${Date.now()}`,
     public: true, // Anyone with link can access (no auth needed)
