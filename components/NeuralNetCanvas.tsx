@@ -98,8 +98,8 @@ export default function NeuralNetCanvas() {
     if (!ctx) return;
 
     const animate = () => {
-      // Clear with semi-transparent background (trail effect) - Higher opacity for visibility
-      ctx.fillStyle = isDark ? 'rgba(26, 26, 30, 0.25)' : 'rgba(232, 230, 225, 0.25)';
+      // Clear with semi-transparent background for trail effect
+      ctx.fillStyle = isDark ? 'rgba(5, 5, 8, 0.15)' : 'rgba(255, 255, 255, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Update and draw nodes
@@ -139,21 +139,21 @@ export default function NeuralNetCanvas() {
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < 180) {
-            const opacity = (1 - distance / 180) * 0.3; // Much more visible
-            // Gradient lines for acceleration feel
+            const opacity = (1 - distance / 180) * 0.5; // Very visible
+            // Electric blue gradient lines for acceleration
             const gradient = ctx.createLinearGradient(node.x, node.y, otherNode.x, otherNode.y);
             if (isDark) {
-              gradient.addColorStop(0, `rgba(122, 127, 153, ${opacity})`);
-              gradient.addColorStop(0.5, `rgba(107, 112, 128, ${opacity * 1.2})`);
-              gradient.addColorStop(1, `rgba(93, 98, 120, ${opacity})`);
+              gradient.addColorStop(0, `rgba(0, 102, 255, ${opacity})`);
+              gradient.addColorStop(0.5, `rgba(0, 212, 255, ${opacity * 1.3})`);
+              gradient.addColorStop(1, `rgba(0, 102, 255, ${opacity})`);
             } else {
-              gradient.addColorStop(0, `rgba(122, 127, 153, ${opacity})`);
-              gradient.addColorStop(0.5, `rgba(136, 145, 168, ${opacity * 1.2})`);
-              gradient.addColorStop(1, `rgba(107, 112, 128, ${opacity})`);
+              gradient.addColorStop(0, `rgba(0, 102, 255, ${opacity * 0.6})`);
+              gradient.addColorStop(0.5, `rgba(0, 212, 255, ${opacity * 0.8})`);
+              gradient.addColorStop(1, `rgba(0, 102, 255, ${opacity * 0.6})`);
             }
 
             ctx.strokeStyle = gradient;
-            ctx.lineWidth = 1.2; // Thicker lines
+            ctx.lineWidth = 1.5; // Thick, visible lines
             ctx.beginPath();
             ctx.moveTo(node.x, node.y);
             ctx.lineTo(otherNode.x, otherNode.y);
@@ -161,23 +161,23 @@ export default function NeuralNetCanvas() {
           }
         });
 
-        // Draw node - More visible with mouse interaction
+        // Draw node - Bold and visible
         const mouseDist = Math.sqrt(
           Math.pow(mousePos.current.x - node.x, 2) +
           Math.pow(mousePos.current.y - node.y, 2)
         );
-        const nodeSize = mouseDist < 150 ? 3 + (150 - mouseDist) / 40 : 3;
+        const nodeSize = mouseDist < 150 ? 4 + (150 - mouseDist) / 30 : 4;
 
-        // Visible node gradient
-        const nodeGradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, nodeSize * 3);
+        // Bold blue node gradient
+        const nodeGradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, nodeSize * 4);
         if (isDark) {
-          nodeGradient.addColorStop(0, 'rgba(122, 127, 153, 0.9)');
-          nodeGradient.addColorStop(0.4, 'rgba(107, 112, 128, 0.6)');
-          nodeGradient.addColorStop(1, 'rgba(93, 98, 120, 0)');
+          nodeGradient.addColorStop(0, 'rgba(0, 212, 255, 1)');
+          nodeGradient.addColorStop(0.3, 'rgba(0, 102, 255, 0.8)');
+          nodeGradient.addColorStop(1, 'rgba(0, 102, 255, 0)');
         } else {
-          nodeGradient.addColorStop(0, 'rgba(122, 127, 153, 0.8)');
-          nodeGradient.addColorStop(0.4, 'rgba(107, 112, 128, 0.5)');
-          nodeGradient.addColorStop(1, 'rgba(136, 145, 168, 0)');
+          nodeGradient.addColorStop(0, 'rgba(0, 102, 255, 0.9)');
+          nodeGradient.addColorStop(0.3, 'rgba(0, 212, 255, 0.6)');
+          nodeGradient.addColorStop(1, 'rgba(0, 102, 255, 0)');
         }
 
         ctx.fillStyle = nodeGradient;
@@ -185,12 +185,12 @@ export default function NeuralNetCanvas() {
         ctx.arc(node.x, node.y, nodeSize, 0, Math.PI * 2);
         ctx.fill();
 
-        // Stronger glow effect on close hover
-        if (mouseDist < 100) {
-          ctx.shadowBlur = 15;
-          ctx.shadowColor = isDark ? 'rgba(122, 127, 153, 0.6)' : 'rgba(107, 112, 128, 0.5)';
+        // Electric glow on hover
+        if (mouseDist < 120) {
+          ctx.shadowBlur = 25;
+          ctx.shadowColor = isDark ? 'rgba(0, 212, 255, 0.8)' : 'rgba(0, 102, 255, 0.6)';
           ctx.beginPath();
-          ctx.arc(node.x, node.y, nodeSize * 1.5, 0, Math.PI * 2);
+          ctx.arc(node.x, node.y, nodeSize * 2, 0, Math.PI * 2);
           ctx.fill();
           ctx.shadowBlur = 0;
         }

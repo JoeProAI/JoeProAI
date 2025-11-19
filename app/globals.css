@@ -3,26 +3,26 @@
 @tailwind utilities;
 
 :root {
-  /* Matte Chalk - Light Mode */
-  --background: #e8e6e1;
-  --foreground: #2a2a2e;
-  --primary: #7a7f99;
-  --primary-dark: #5d6278;
-  --secondary: #6b7080;
-  --accent: #8891a8;
-  --border: #b8b6b0;
-  --card-bg: #f0eee9;
-  --text-muted: #5a5f6e;
+  /* Acceleration Theme - Light Mode */
+  --background: #ffffff;
+  --foreground: #0a0a0f;
+  --primary: #0066ff;
+  --primary-dark: #0052cc;
+  --secondary: #3d4152;
+  --accent: #00d4ff;
+  --border: #e0e0e8;
+  --card-bg: #fafafa;
+  --text-muted: #616172;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Matte Chalk - Dark Mode */
-    --background: #1a1a1e;
-    --foreground: #d0cec8;
-    --card-bg: #252529;
-    --border: #36363c;
-    --text-muted: #8a8f9e;
+    /* Acceleration Theme - Dark Mode */
+    --background: #050508;
+    --foreground: #f0f0f5;
+    --card-bg: #0f0f14;
+    --border: #1a1a24;
+    --text-muted: #9090a8;
   }
 }
 
@@ -83,18 +83,20 @@ body {
   text-wrap: balance;
 }
 
-/* Refined Button Styles - Matte Chalk */
+/* Acceleration Button Styles */
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: #fafaf7;
-  font-weight: 600;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #ffffff;
+  font-weight: 700;
   border-radius: 8px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2);
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 16px rgba(122, 127, 153, 0.3);
+  transform: translateX(4px) translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 102, 255, 0.4);
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
 }
 
 .btn-secondary {
@@ -111,43 +113,44 @@ body {
   transform: translateY(-1px);
 }
 
-/* Subtle Grid Background - Matte Chalk */
+/* Dynamic Grid Background */
 .subtle-grid {
   background-image:
-    linear-gradient(rgba(122, 127, 153, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(122, 127, 153, 0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
+    linear-gradient(rgba(0, 102, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
   background-position: center center;
 }
 
-/* Glass Morphism - Matte Chalk */
+/* Glass Morphism */
 .glass {
-  background: rgba(240, 238, 233, 0.7);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(0, 102, 255, 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
   .glass {
-    background: rgba(37, 37, 41, 0.7);
-    border: 1px solid var(--border);
+    background: rgba(15, 15, 20, 0.8);
+    backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(0, 212, 255, 0.2);
   }
 }
 
-/* Clipped Corners - Matte Chalk with soft glow */
+/* Dynamic Corners with Glow */
 .clip-corners {
-  clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+  clip-path: polygon(12px 0%, 100% 0%, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0% 100%, 0% 12px);
   position: relative;
   box-shadow:
-    0 0 8px rgba(122, 127, 153, 0.15),
-    inset 0 0 12px rgba(122, 127, 153, 0.08);
+    0 0 20px rgba(0, 102, 255, 0.15),
+    inset 0 0 20px rgba(0, 212, 255, 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
   .clip-corners {
     box-shadow:
-      0 0 10px rgba(122, 127, 153, 0.2),
-      inset 0 0 15px rgba(122, 127, 153, 0.12);
+      0 0 30px rgba(0, 212, 255, 0.3),
+      inset 0 0 30px rgba(0, 102, 255, 0.15);
   }
 }
 
