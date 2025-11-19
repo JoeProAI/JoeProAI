@@ -3,24 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --background: #fafafa;
-  --foreground: #0a0a0a;
-  --primary: #6366f1;
-  --primary-dark: #4f46e5;
-  --secondary: #64748b;
-  --accent: #3b82f6;
-  --border: #e5e7eb;
-  --card-bg: #ffffff;
-  --text-muted: #64748b;
+  /* Matte Chalk - Light Mode */
+  --background: #f5f5f0;
+  --foreground: #3a3a3f;
+  --primary: #9ba0b8;
+  --primary-dark: #7d8299;
+  --secondary: #8a8f9e;
+  --accent: #a8b5c7;
+  --border: #d8d8d0;
+  --card-bg: #fafaf7;
+  --text-muted: #7a7f8e;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a14;
-    --foreground: #f8fafc;
-    --card-bg: #151521;
-    --border: #27273a;
-    --text-muted: #94a3b8;
+    /* Matte Chalk - Dark Mode */
+    --background: #242428;
+    --foreground: #d8d8d0;
+    --card-bg: #2e2e33;
+    --border: #3f3f45;
+    --text-muted: #9a9fae;
   }
 }
 
@@ -81,10 +83,10 @@ body {
   text-wrap: balance;
 }
 
-/* Refined Button Styles */
+/* Refined Button Styles - Matte Chalk */
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
+  color: #fafaf7;
   font-weight: 600;
   border-radius: 8px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -92,7 +94,7 @@ body {
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 8px 16px rgba(155, 160, 184, 0.25);
 }
 
 .btn-secondary {
@@ -109,43 +111,43 @@ body {
   transform: translateY(-1px);
 }
 
-/* Subtle Grid Background */
+/* Subtle Grid Background - Matte Chalk */
 .subtle-grid {
-  background-image: 
-    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(155, 160, 184, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(155, 160, 184, 0.03) 1px, transparent 1px);
   background-size: 40px 40px;
   background-position: center center;
 }
 
-/* Glass Morphism */
+/* Glass Morphism - Matte Chalk */
 .glass {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(250, 250, 247, 0.7);
   backdrop-filter: blur(20px);
   border: 1px solid var(--border);
 }
 
 @media (prefers-color-scheme: dark) {
   .glass {
-    background: rgba(30, 41, 59, 0.8);
+    background: rgba(46, 46, 51, 0.7);
     border: 1px solid var(--border);
   }
 }
 
-/* Clipped Corners - Rectangular with cut edges and subtle glow */
+/* Clipped Corners - Matte Chalk with soft glow */
 .clip-corners {
   clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
   position: relative;
-  box-shadow: 
-    0 0 8px rgba(37, 99, 235, 0.15),
-    inset 0 0 12px rgba(37, 99, 235, 0.08);
+  box-shadow:
+    0 0 8px rgba(155, 160, 184, 0.12),
+    inset 0 0 12px rgba(155, 160, 184, 0.06);
 }
 
 @media (prefers-color-scheme: dark) {
   .clip-corners {
-    box-shadow: 
-      0 0 10px rgba(59, 130, 246, 0.2),
-      inset 0 0 15px rgba(59, 130, 246, 0.1);
+    box-shadow:
+      0 0 10px rgba(155, 160, 184, 0.15),
+      inset 0 0 15px rgba(155, 160, 184, 0.08);
   }
 }
 
