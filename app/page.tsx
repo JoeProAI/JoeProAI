@@ -1,14 +1,11 @@
 import Hero from '@/components/Hero';
-import NeuralNetworkBG from '@/components/NeuralNetworkBG';
-
-// Force dynamic rendering to avoid build timeout with canvas/animation client components
-export const dynamic = 'force-dynamic';
 
 export default function Home() {
   return (
-    <>
-      <NeuralNetworkBG />
+    <div className="relative min-h-screen" style={{
+      background: 'linear-gradient(135deg, #001030 0%, #000510 100%)'
+    }}>
       <Hero />
-    </>
+    </div>
   );
 }
