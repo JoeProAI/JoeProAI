@@ -6,7 +6,7 @@ import { ArrowRight, Zap, TrendingUp, Database, BarChart3 } from 'lucide-react';
 
 export default function Hero() {
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-6 py-20">
+    <div className="relative min-h-screen flex flex-col items-center justify-center px-6 py-20 z-10">
       <div className="max-w-5xl mx-auto text-center">
         {/* Badge */}
         <motion.div

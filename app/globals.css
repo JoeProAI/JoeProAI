@@ -201,20 +201,25 @@ h1, h2, h3, h4, h5, h6 {
 .neural-bg {
   position: fixed;
   inset: 0;
-  z-index: -10;
+  z-index: 0;
   background: linear-gradient(135deg, #001030 0%, #000510 100%);
   overflow: hidden;
+  pointer-events: none;
 }
 
 .neural-dot {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  background: radial-gradient(circle, #00d4ff 0%, #0066ff 50%, transparent 100%);
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, #00d4ff 0%, #0066ff 40%, transparent 70%);
   border-radius: 50%;
-  box-shadow: 0 0 60px #00d4ff, 0 0 100px rgba(0, 212, 255, 0.5);
+  box-shadow: 
+    0 0 80px #00d4ff, 
+    0 0 120px rgba(0, 212, 255, 0.6),
+    inset 0 0 40px rgba(0, 212, 255, 0.8);
   animation: float 20s infinite ease-in-out;
-  opacity: 0.8;
+  opacity: 0.9;
+  filter: blur(2px);
 }
 
 .neural-dot:nth-child(1) { left: 5%; top: 10%; animation-delay: 0s; }
