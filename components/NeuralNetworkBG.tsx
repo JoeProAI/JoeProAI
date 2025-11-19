@@ -2,21 +2,25 @@
 
 import { useEffect, useState } from 'react';
 
+// Fixed node positions (deterministic, no random on render)
+const FIXED_NODES = Array.from({ length: 40 }, (_, i) => {
+  // Use index-based seed for consistent positions
+  const seed = i * 123.456;
+  return {
+    id: i,
+    x: ((seed * 9301 + 49297) % 233280) / 2332.8,
+    y: ((seed * 4253 + 15731) % 233280) / 2332.8,
+    size: 3 + ((seed * 7919) % 30) / 10,
+  };
+});
+
 export default function NeuralNetworkBG() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [nodes] = useState(() => {
-    // Generate fixed node positions
-    const nodeArray = [];
-    for (let i = 0; i < 40; i++) {
-      nodeArray.push({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 3 + Math.random() * 3,
-      });
-    }
-    return nodeArray;
-  });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -29,6 +33,10 @@ export default function NeuralNetworkBG() {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  if (!mounted) {
+    return null; // Prevent hydration mismatch
+  }
 
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">
@@ -72,8 +80,8 @@ export default function NeuralNetworkBG() {
         </defs>
 
         {/* Draw connections */}
-        {nodes.map((node, i) => (
-          nodes.slice(i + 1).map((otherNode, j) => {
+        {FIXED_NODES.map((node, i) => (
+          FIXED_NODES.slice(i + 1).map((otherNode, j) => {
             const dx = otherNode.x - node.x;
             const dy = otherNode.y - node.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
@@ -101,7 +109,7 @@ export default function NeuralNetworkBG() {
         ))}
 
         {/* Draw nodes */}
-        {nodes.map((node) => {
+        {FIXED_NODES.map((node) => {
           // Calculate distance from mouse
           const dx = mousePos.x - node.x;
           const dy = mousePos.y - node.y;
