@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createXAIStreamCompletion, createXAICompletion } from '@/lib/llm/xai-client';
+import type OpenAI from 'openai';
 
 export const runtime = 'edge';
 
@@ -38,9 +39,8 @@ export async function POST(req: NextRequest) {
         headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' },
       });
     } else {
-      const response = await createXAICompletion(messages, model || 'grok-2-latest', temperature, false);
+      const response = await createXAICompletion(messages, model || 'grok-2-latest', temperature, false) as OpenAI.ChatCompletion;
 
-      // Type assertion: when stream is false, response is ChatCompletion
       return NextResponse.json({
         content: response.choices?.[0]?.message?.content || '',
         model: response.model || model,
