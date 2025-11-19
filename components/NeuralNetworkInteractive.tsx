@@ -8,7 +8,18 @@ interface Node {
   vx: number;
   vy: number;
   radius: number;
+  color: string;
+  glowColor: string;
 }
+
+const COLORS = [
+  { main: '#00d4ff', glow: 'rgba(0, 212, 255' }, // Cyan
+  { main: '#0066ff', glow: 'rgba(0, 102, 255' }, // Blue
+  { main: '#a855f7', glow: 'rgba(168, 85, 247' }, // Purple
+  { main: '#ec4899', glow: 'rgba(236, 72, 153' }, // Pink
+  { main: '#10b981', glow: 'rgba(16, 185, 129' }, // Green
+  { main: '#f59e0b', glow: 'rgba(245, 158, 11' }, // Orange
+];
 
 export default function NeuralNetworkInteractive() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -31,15 +42,18 @@ export default function NeuralNetworkInteractive() {
     updateSize();
     window.addEventListener('resize', updateSize);
 
-    // Initialize nodes
+    // Initialize nodes with random colors
     if (nodesRef.current.length === 0) {
       for (let i = 0; i < 60; i++) {
+        const color = COLORS[Math.floor(Math.random() * COLORS.length)];
         nodesRef.current.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           vx: (Math.random() - 0.5) * 0.5,
           vy: (Math.random() - 0.5) * 0.5,
           radius: Math.random() * 3 + 2,
+          color: color.main,
+          glowColor: color.glow,
         });
       }
     }
@@ -97,10 +111,14 @@ export default function NeuralNetworkInteractive() {
               otherNode.x, otherNode.y
             );
             
-            const glowMultiplier = mouseDistToLine < 50 ? 2 : 1;
+            const glowMultiplier = mouseDistToLine < 50 ? 1.5 : 1;
             
-            ctx.strokeStyle = `rgba(0, 212, 255, ${opacity * glowMultiplier})`;
-            ctx.lineWidth = mouseDistToLine < 50 ? 2 : 1;
+            // Use blended color from both nodes
+            const gradient = ctx.createLinearGradient(node.x, node.y, otherNode.x, otherNode.y);
+            gradient.addColorStop(0, `${node.glowColor}, ${opacity * glowMultiplier})`);
+            gradient.addColorStop(1, `${otherNode.glowColor}, ${opacity * glowMultiplier})`);
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = mouseDistToLine < 50 ? 0.8 : 0.4;
             ctx.beginPath();
             ctx.moveTo(node.x, node.y);
             ctx.lineTo(otherNode.x, otherNode.y);
@@ -121,9 +139,9 @@ export default function NeuralNetworkInteractive() {
           node.x, node.y, 0,
           node.x, node.y, node.radius * scale * 3
         );
-        gradient.addColorStop(0, 'rgba(0, 212, 255, 0.8)');
-        gradient.addColorStop(0.5, 'rgba(0, 102, 255, 0.4)');
-        gradient.addColorStop(1, 'rgba(0, 102, 255, 0)');
+        gradient.addColorStop(0, `${node.glowColor}, 0.8)`);
+        gradient.addColorStop(0.5, `${node.glowColor}, 0.4)`);
+        gradient.addColorStop(1, `${node.glowColor}, 0)`);
         
         ctx.fillStyle = gradient;
         ctx.beginPath();
@@ -131,9 +149,9 @@ export default function NeuralNetworkInteractive() {
         ctx.fill();
 
         // Core
-        ctx.fillStyle = mouseDist < 100 ? '#00d4ff' : '#0066ff';
+        ctx.fillStyle = node.color;
         ctx.shadowBlur = glowSize;
-        ctx.shadowColor = '#00d4ff';
+        ctx.shadowColor = node.color;
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius * scale, 0, Math.PI * 2);
         ctx.fill();

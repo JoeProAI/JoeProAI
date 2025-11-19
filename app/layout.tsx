@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import FloatingChat from "@/components/FloatingChat";
+import NeuralNetworkInteractive from "@/components/NeuralNetworkInteractive";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        {/* Neural Network Background - Appears on ALL pages */}
+        <NeuralNetworkInteractive />
+        
         {/* Navigation */}
         <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
