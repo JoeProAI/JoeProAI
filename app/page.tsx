@@ -1,33 +1,10 @@
 import Hero from '@/components/Hero';
+import NeuralNetworkInteractive from '@/components/NeuralNetworkInteractive';
 
 export default function Home() {
   return (
     <>
-      {/* Pure CSS Neural Network Background - NO REACT COMPONENTS */}
-      <div className="neural-bg">
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-dot"></div>
-        <div className="neural-scan"></div>
-      </div>
-      
+      <NeuralNetworkInteractive />
       <Hero />
     </>
   );
