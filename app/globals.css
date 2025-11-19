@@ -41,33 +41,37 @@ body {
 }
 
 body {
-  font-family: ui-monospace, 'SF Mono', Monaco, 'Cascadia Mono', 'Courier New', monospace;
+  font-family: 'Courier New', 'Courier', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'zero', 'ss02';
-  letter-spacing: -0.02em;
-  line-height: 1.6;
+  font-feature-settings: normal;
+  letter-spacing: 0.02em;
+  line-height: 1.7;
+  font-weight: 500;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: 'Impact', 'Arial Black', 'Arial Bold', sans-serif;
   font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 1.1;
+  letter-spacing: 0.08em;
+  line-height: 1.05;
   text-transform: uppercase;
+  font-stretch: condensed;
   background: linear-gradient(
     90deg,
     #f0f0f5 0%,
-    #00d4ff 25%,
-    #f0f0f5 50%,
-    #a855f7 75%,
+    #00d4ff 20%,
+    #ec4899 40%,
+    #10b981 60%,
+    #a855f7 80%,
     #f0f0f5 100%
   );
-  background-size: 200% 100%;
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: text-shimmer 6s ease-in-out infinite;
+  animation: text-shimmer 4s ease-in-out infinite;
+  text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
 }
 
 @keyframes text-shimmer {

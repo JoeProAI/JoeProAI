@@ -10,18 +10,23 @@ export default function Hero() {
       <div className="max-w-5xl mx-auto text-center">
         {/* Badge */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--primary)] bg-[var(--card-bg)] mb-8 relative overflow-hidden"
+          className="inline-flex items-center gap-3 px-6 py-2 mb-8 relative border-2 border-cyan-400"
+          style={{
+            clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)',
+            background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(168, 85, 247, 0.1))',
+            boxShadow: '0 0 20px rgba(0, 212, 255, 0.4), inset 0 0 20px rgba(0, 212, 255, 0.1)'
+          }}
         >
+          <Zap className="w-4 h-4 text-cyan-400" />
+          <span className="text-sm font-bold tracking-widest uppercase text-gradient">GROK INSIDE</span>
           <motion.div 
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent opacity-20"
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-20"
             animate={{ x: ['-100%', '200%'] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
           />
-          <Zap className="w-3.5 h-3.5 text-[var(--primary)] relative z-10" />
-          <span className="text-sm font-semibold text-foreground relative z-10">AI-Powered Acceleration</span>
         </motion.div>
 
         {/* Main Headline */}
