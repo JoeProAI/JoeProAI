@@ -98,20 +98,20 @@ export default function NeuralNetCanvas() {
     if (!ctx) return;
 
     const animate = () => {
-      // Clear with semi-transparent background (trail effect)
-      ctx.fillStyle = isDark ? 'rgba(15, 23, 42, 0.3)' : 'rgba(255, 255, 255, 0.3)';
+      // Clear with semi-transparent background (trail effect) - Matte Chalk
+      ctx.fillStyle = isDark ? 'rgba(36, 36, 40, 0.4)' : 'rgba(245, 245, 240, 0.4)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Update and draw nodes
       nodes.forEach((node, i) => {
-        // Mouse interaction - attract nodes to cursor
+        // Very light mouse interaction - subtle attraction
         const dx = mousePos.current.x - node.x;
         const dy = mousePos.current.y - node.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        
-        if (dist < 150 && !prefersReducedMotion) {
-          node.vx += dx * 0.0001;
-          node.vy += dy * 0.0001;
+
+        if (dist < 200 && !prefersReducedMotion) {
+          node.vx += dx * 0.00003;
+          node.vy += dy * 0.00003;
         }
 
         // Update position
@@ -130,30 +130,30 @@ export default function NeuralNetCanvas() {
         node.vx *= 0.99;
         node.vy *= 0.99;
 
-        // Draw connections
+        // Draw connections - Matte Chalk with very light opacity
         nodes.forEach((otherNode, j) => {
           if (i >= j) return;
-          
+
           const dx = otherNode.x - node.x;
           const dy = otherNode.y - node.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-          
-          if (distance < 150) {
-            const opacity = (1 - distance / 150) * 0.15;
-            // Subtle gradient lines
+
+          if (distance < 180) {
+            const opacity = (1 - distance / 180) * 0.08;
+            // Very subtle matte chalk gradient lines
             const gradient = ctx.createLinearGradient(node.x, node.y, otherNode.x, otherNode.y);
             if (isDark) {
-              gradient.addColorStop(0, `rgba(100, 116, 139, ${opacity})`);
-              gradient.addColorStop(0.5, `rgba(148, 163, 184, ${opacity})`);
-              gradient.addColorStop(1, `rgba(71, 85, 105, ${opacity})`);
+              gradient.addColorStop(0, `rgba(155, 160, 184, ${opacity})`);
+              gradient.addColorStop(0.5, `rgba(138, 143, 158, ${opacity})`);
+              gradient.addColorStop(1, `rgba(125, 130, 153, ${opacity})`);
             } else {
-              gradient.addColorStop(0, `rgba(203, 213, 225, ${opacity})`);
-              gradient.addColorStop(0.5, `rgba(226, 232, 240, ${opacity})`);
-              gradient.addColorStop(1, `rgba(148, 163, 184, ${opacity})`);
+              gradient.addColorStop(0, `rgba(155, 160, 184, ${opacity})`);
+              gradient.addColorStop(0.5, `rgba(168, 181, 199, ${opacity})`);
+              gradient.addColorStop(1, `rgba(138, 143, 158, ${opacity})`);
             }
-            
+
             ctx.strokeStyle = gradient;
-            ctx.lineWidth = 0.8;
+            ctx.lineWidth = 0.6;
             ctx.beginPath();
             ctx.moveTo(node.x, node.y);
             ctx.lineTo(otherNode.x, otherNode.y);
@@ -161,34 +161,34 @@ export default function NeuralNetCanvas() {
           }
         });
 
-        // Draw node
+        // Draw node - Matte Chalk with very light mouse response
         const mouseDist = Math.sqrt(
-          Math.pow(mousePos.current.x - node.x, 2) + 
+          Math.pow(mousePos.current.x - node.x, 2) +
           Math.pow(mousePos.current.y - node.y, 2)
         );
-        const nodeSize = mouseDist < 100 ? 3.5 + (100 - mouseDist) / 25 : 2.5;
-        
-        // Subtle node gradient
-        const nodeGradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, nodeSize * 2);
+        const nodeSize = mouseDist < 150 ? 2.5 + (150 - mouseDist) / 50 : 2;
+
+        // Very subtle matte chalk node gradient
+        const nodeGradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, nodeSize * 2.5);
         if (isDark) {
-          nodeGradient.addColorStop(0, 'rgba(148, 163, 184, 0.8)');
-          nodeGradient.addColorStop(0.5, 'rgba(100, 116, 139, 0.5)');
-          nodeGradient.addColorStop(1, 'rgba(71, 85, 105, 0)');
+          nodeGradient.addColorStop(0, 'rgba(155, 160, 184, 0.5)');
+          nodeGradient.addColorStop(0.5, 'rgba(138, 143, 158, 0.3)');
+          nodeGradient.addColorStop(1, 'rgba(125, 130, 153, 0)');
         } else {
-          nodeGradient.addColorStop(0, 'rgba(148, 163, 184, 0.7)');
-          nodeGradient.addColorStop(0.5, 'rgba(203, 213, 225, 0.4)');
-          nodeGradient.addColorStop(1, 'rgba(226, 232, 240, 0)');
+          nodeGradient.addColorStop(0, 'rgba(155, 160, 184, 0.4)');
+          nodeGradient.addColorStop(0.5, 'rgba(138, 143, 158, 0.25)');
+          nodeGradient.addColorStop(1, 'rgba(168, 181, 199, 0)');
         }
-        
+
         ctx.fillStyle = nodeGradient;
         ctx.beginPath();
         ctx.arc(node.x, node.y, nodeSize, 0, Math.PI * 2);
         ctx.fill();
 
-        // Subtle glow effect on hover
-        if (mouseDist < 50) {
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = isDark ? 'rgba(148, 163, 184, 0.5)' : 'rgba(100, 116, 139, 0.3)';
+        // Very subtle glow effect on close hover
+        if (mouseDist < 80) {
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = isDark ? 'rgba(155, 160, 184, 0.3)' : 'rgba(138, 143, 158, 0.2)';
           ctx.beginPath();
           ctx.arc(node.x, node.y, nodeSize, 0, Math.PI * 2);
           ctx.fill();
@@ -220,7 +220,7 @@ export default function NeuralNetCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 -z-10"
-      style={{ width: '100vw', height: '100vh', background: isDark ? '#0f172a' : '#ffffff' }}
+      style={{ width: '100vw', height: '100vh', background: isDark ? '#242428' : '#f5f5f0' }}
     />
   );
 }

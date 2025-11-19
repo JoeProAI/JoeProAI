@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { loadAgentConfig } from '@/lib/agents/config';
-import { createOpenAIStreamCompletion } from '@/lib/llm/openai-client';
 import { createXAIStreamCompletion } from '@/lib/llm/xai-client';
 
 // Using Node.js runtime because loadAgentConfig uses fs/path modules
@@ -25,12 +24,8 @@ export async function POST(req: NextRequest) {
       { role: 'user', content: userMessage }
     ];
 
-    let streamResponse;
-    if (config.provider === 'openai') {
-      streamResponse = await createOpenAIStreamCompletion(messages, config.model, config.temperature);
-    } else {
-      streamResponse = await createXAIStreamCompletion(messages, config.model, config.temperature);
-    }
+    // Always use xAI/Grok
+    const streamResponse = await createXAIStreamCompletion(messages, config.model, config.temperature);
 
     const encoder = new TextEncoder();
     const stream = new ReadableStream({

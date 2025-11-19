@@ -6,7 +6,7 @@ export interface AgentConfig {
   name: string;
   systemPrompt: string;
   model: string;
-  provider: 'openai' | 'xai';
+  provider: 'xai';
   temperature: number;
   tools: string[];
   createdAt: string;

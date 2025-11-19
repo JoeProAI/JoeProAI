@@ -12,8 +12,8 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [provider, setProvider] = useState<'openai' | 'xai'>('openai');
-  const [model, setModel] = useState('gpt-4-turbo-preview');
+  const [provider] = useState<'xai'>('xai');
+  const [model, setModel] = useState('grok-2-latest');
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
@@ -64,39 +64,23 @@ export default function ChatPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4 text-gradient">AI Chat</h1>
+          <h1 className="text-4xl font-bold mb-4 text-gradient">Grok AI Chat</h1>
           <p className="text-secondary dark:text-slate-400">
-            Chat with OpenAI or xAI models
+            Chat with xAI's latest Grok models
           </p>
         </div>
 
         {/* Model Selection */}
         <div className="mb-6 flex gap-4 flex-wrap">
           <select
-            value={provider}
-            onChange={(e) => {
-              setProvider(e.target.value as 'openai' | 'xai');
-              setModel(e.target.value === 'openai' ? 'gpt-4-turbo-preview' : 'grok-beta');
-            }}
-            className="px-4 py-2 glass card-border bg-card-bg text-foreground"
-          >
-            <option value="openai">OpenAI</option>
-            <option value="xai">xAI (Grok)</option>
-          </select>
-
-          <select
             value={model}
             onChange={(e) => setModel(e.target.value)}
             className="px-4 py-2 glass card-border bg-card-bg text-foreground"
           >
-            {provider === 'openai' ? (
-              <>
-                <option value="gpt-4-turbo-preview">GPT-4 Turbo</option>
-                <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-              </>
-            ) : (
-              <option value="grok-beta">Grok Beta</option>
-            )}
+            <option value="grok-2-latest">Grok 2 (Latest)</option>
+            <option value="grok-2-1212">Grok 2 (Dec 2024)</option>
+            <option value="grok-vision-beta">Grok Vision Beta</option>
+            <option value="grok-beta">Grok Beta</option>
           </select>
 
           {messages.length > 0 && (

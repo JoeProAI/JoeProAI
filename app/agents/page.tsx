@@ -46,7 +46,7 @@ export default function AgentsPage() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [showCreateAgent, setShowCreateAgent] = useState(false);
   const [newAgent, setNewAgent] = useState({ name: '', systemPrompt: '', type: 'general' as Agent['type'] });
-  const [provider, setProvider] = useState<'openai' | 'xai'>('xai');
+  const [provider] = useState<'xai'>('xai');
   const [model, setModel] = useState('grok-2-latest');
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -297,40 +297,16 @@ export default function AgentsPage() {
                 {/* Model Selector */}
                 <div className="flex items-center gap-4 mb-4 px-4 py-3 glass card-border">
                   <div className="flex items-center gap-2">
-                    <label className="text-sm font-medium text-secondary">Provider:</label>
-                    <select
-                      value={provider}
-                      onChange={(e) => {
-                        const newProvider = e.target.value as 'openai' | 'xai';
-                        setProvider(newProvider);
-                        setModel(newProvider === 'xai' ? 'grok-2-latest' : 'gpt-4-turbo-preview');
-                      }}
-                      className="px-3 py-1.5 glass card-border bg-card-bg text-foreground rounded"
-                    >
-                      <option value="xai">xAI (Grok)</option>
-                      <option value="openai">OpenAI</option>
-                    </select>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm font-medium text-secondary">Model:</label>
+                    <label className="text-sm font-medium text-secondary">Grok Model:</label>
                     <select
                       value={model}
                       onChange={(e) => setModel(e.target.value)}
                       className="px-3 py-1.5 glass card-border bg-card-bg text-foreground rounded"
                     >
-                      {provider === 'xai' ? (
-                        <>
-                          <option value="grok-2-latest">Grok 2 (Latest)</option>
-                          <option value="grok-2-1212">Grok 2 (Dec 2024)</option>
-                          <option value="grok-vision-beta">Grok Vision Beta</option>
-                        </>
-                      ) : (
-                        <>
-                          <option value="gpt-4-turbo-preview">GPT-4 Turbo</option>
-                          <option value="gpt-4">GPT-4</option>
-                          <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-                        </>
-                      )}
+                      <option value="grok-2-latest">Grok 2 (Latest)</option>
+                      <option value="grok-2-1212">Grok 2 (Dec 2024)</option>
+                      <option value="grok-vision-beta">Grok Vision Beta</option>
+                      <option value="grok-beta">Grok Beta</option>
                     </select>
                   </div>
                 </div>
