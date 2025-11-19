@@ -41,22 +41,23 @@ body {
 }
 
 body {
-  font-family: 'Courier New', 'Courier', monospace;
+  font-family: 'Consolas', 'Monaco', 'Lucida Console', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: normal;
-  letter-spacing: 0.02em;
-  line-height: 1.7;
-  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.65;
+  font-weight: 400;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Impact', 'Arial Black', 'Arial Bold', sans-serif;
+  font-family: 'Arial Narrow', 'Arial', 'Helvetica Condensed', sans-serif;
   font-weight: 900;
-  letter-spacing: 0.08em;
-  line-height: 1.05;
+  letter-spacing: 0.15em;
+  line-height: 0.95;
   text-transform: uppercase;
-  font-stretch: condensed;
+  font-stretch: extra-condensed;
+  position: relative;
   background: linear-gradient(
     90deg,
     #f0f0f5 0%,
@@ -66,17 +67,48 @@ h1, h2, h3, h4, h5, h6 {
     #a855f7 80%,
     #f0f0f5 100%
   );
-  background-size: 300% 100%;
+  background-size: 400% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: text-shimmer 4s ease-in-out infinite;
-  text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+  animation: text-shimmer 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.6))
+          drop-shadow(0 0 40px rgba(168, 85, 247, 0.4))
+          drop-shadow(0 0 60px rgba(236, 72, 153, 0.3));
+  animation: text-shimmer 3s ease-in-out infinite, text-glow 2s ease-in-out infinite alternate;
 }
 
 @keyframes text-shimmer {
   0%, 100% { background-position: 0% 0%; }
   50% { background-position: 100% 0%; }
+}
+
+@keyframes text-glow {
+  0% {
+    filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3))
+            drop-shadow(0 0 20px rgba(168, 85, 247, 0.2))
+            drop-shadow(0 0 30px rgba(236, 72, 153, 0.1));
+  }
+  25% {
+    filter: drop-shadow(0 0 30px rgba(236, 72, 153, 0.6))
+            drop-shadow(0 0 50px rgba(16, 185, 129, 0.4))
+            drop-shadow(0 0 70px rgba(0, 212, 255, 0.2));
+  }
+  50% {
+    filter: drop-shadow(0 0 25px rgba(16, 185, 129, 0.5))
+            drop-shadow(0 0 45px rgba(245, 158, 11, 0.3))
+            drop-shadow(0 0 65px rgba(168, 85, 247, 0.2));
+  }
+  75% {
+    filter: drop-shadow(0 0 35px rgba(168, 85, 247, 0.6))
+            drop-shadow(0 0 55px rgba(0, 102, 255, 0.4))
+            drop-shadow(0 0 75px rgba(236, 72, 153, 0.2));
+  }
+  100% {
+    filter: drop-shadow(0 0 20px rgba(0, 102, 255, 0.4))
+            drop-shadow(0 0 40px rgba(0, 212, 255, 0.3))
+            drop-shadow(0 0 60px rgba(16, 185, 129, 0.2));
+  }
 }
 
 /* Clean Scrollbar */
