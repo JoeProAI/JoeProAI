@@ -18,11 +18,15 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Acceleration Theme - Dark Mode */
-    --background: #050508;
-    --foreground: #f0f0f5;
-    --card-bg: #0f0f14;
-    --border: #1a1a24;
-    --text-muted: #9090a8;
+    --background: #000000;
+    --foreground: #ffffff;
+    --card-bg: #0a0a0f;
+    --border: #1a1a2a;
+    --text-muted: #8888aa;
+  }
+  
+  body {
+    background: radial-gradient(ellipse at top, #001020 0%, #000000 50%, #000000 100%);
   }
 }
 
@@ -52,62 +56,83 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Arial Narrow', 'Arial', 'Helvetica Condensed', sans-serif;
-  font-weight: 900;
-  letter-spacing: 0.15em;
-  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 0.92;
   text-transform: uppercase;
   font-stretch: extra-condensed;
   position: relative;
   background: linear-gradient(
     90deg,
-    #f0f0f5 0%,
-    #00d4ff 20%,
-    #ec4899 40%,
-    #10b981 60%,
-    #a855f7 80%,
-    #f0f0f5 100%
+    #ffffff 0%,
+    #00d4ff 15%,
+    #ffffff 30%,
+    #ec4899 45%,
+    #ffffff 60%,
+    #10b981 75%,
+    #ffffff 90%,
+    #a855f7 100%
   );
-  background-size: 400% 100%;
+  background-size: 500% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: text-shimmer 3s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.6))
-          drop-shadow(0 0 40px rgba(168, 85, 247, 0.4))
-          drop-shadow(0 0 60px rgba(236, 72, 153, 0.3));
-  animation: text-shimmer 3s ease-in-out infinite, text-glow 2s ease-in-out infinite alternate;
+  animation: text-shimmer 5.7s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite, 
+             text-glow-organic 7.3s cubic-bezier(0.42, 0, 0.58, 1) infinite;
 }
 
 @keyframes text-shimmer {
-  0%, 100% { background-position: 0% 0%; }
-  50% { background-position: 100% 0%; }
+  0% { background-position: 0% 0%; }
+  33% { background-position: 60% 0%; }
+  66% { background-position: 120% 0%; }
+  100% { background-position: 200% 0%; }
 }
 
-@keyframes text-glow {
+@keyframes text-glow-organic {
   0% {
-    filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3))
-            drop-shadow(0 0 20px rgba(168, 85, 247, 0.2))
-            drop-shadow(0 0 30px rgba(236, 72, 153, 0.1));
+    filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4))
+            drop-shadow(2px 2px 16px rgba(168, 85, 247, 0.3))
+            drop-shadow(-1px 1px 24px rgba(236, 72, 153, 0.2));
   }
-  25% {
-    filter: drop-shadow(0 0 30px rgba(236, 72, 153, 0.6))
-            drop-shadow(0 0 50px rgba(16, 185, 129, 0.4))
-            drop-shadow(0 0 70px rgba(0, 212, 255, 0.2));
+  11% {
+    filter: drop-shadow(1px -1px 12px rgba(236, 72, 153, 0.5))
+            drop-shadow(-2px 1px 22px rgba(0, 212, 255, 0.3))
+            drop-shadow(0 2px 32px rgba(16, 185, 129, 0.25));
   }
-  50% {
-    filter: drop-shadow(0 0 25px rgba(16, 185, 129, 0.5))
-            drop-shadow(0 0 45px rgba(245, 158, 11, 0.3))
-            drop-shadow(0 0 65px rgba(168, 85, 247, 0.2));
+  23% {
+    filter: drop-shadow(-1px 2px 18px rgba(16, 185, 129, 0.6))
+            drop-shadow(2px 0 28px rgba(245, 158, 11, 0.4))
+            drop-shadow(1px -1px 38px rgba(0, 102, 255, 0.2));
   }
-  75% {
-    filter: drop-shadow(0 0 35px rgba(168, 85, 247, 0.6))
-            drop-shadow(0 0 55px rgba(0, 102, 255, 0.4))
-            drop-shadow(0 0 75px rgba(236, 72, 153, 0.2));
+  37% {
+    filter: drop-shadow(2px 1px 14px rgba(245, 158, 11, 0.5))
+            drop-shadow(-1px -1px 26px rgba(168, 85, 247, 0.4))
+            drop-shadow(0 2px 34px rgba(236, 72, 153, 0.3));
+  }
+  49% {
+    filter: drop-shadow(-2px 0 20px rgba(168, 85, 247, 0.6))
+            drop-shadow(1px 2px 30px rgba(0, 102, 255, 0.45))
+            drop-shadow(0 -1px 42px rgba(0, 212, 255, 0.25));
+  }
+  61% {
+    filter: drop-shadow(1px 1px 16px rgba(0, 102, 255, 0.5))
+            drop-shadow(-1px 2px 24px rgba(16, 185, 129, 0.4))
+            drop-shadow(2px 0 36px rgba(236, 72, 153, 0.3));
+  }
+  74% {
+    filter: drop-shadow(0 -2px 22px rgba(16, 185, 129, 0.55))
+            drop-shadow(2px 1px 32px rgba(0, 212, 255, 0.4))
+            drop-shadow(-1px 0 40px rgba(168, 85, 247, 0.25));
+  }
+  87% {
+    filter: drop-shadow(-1px 1px 10px rgba(0, 212, 255, 0.5))
+            drop-shadow(1px -1px 20px rgba(236, 72, 153, 0.35))
+            drop-shadow(0 2px 30px rgba(245, 158, 11, 0.3));
   }
   100% {
-    filter: drop-shadow(0 0 20px rgba(0, 102, 255, 0.4))
-            drop-shadow(0 0 40px rgba(0, 212, 255, 0.3))
-            drop-shadow(0 0 60px rgba(16, 185, 129, 0.2));
+    filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4))
+            drop-shadow(2px 2px 16px rgba(168, 85, 247, 0.3))
+            drop-shadow(-1px 1px 24px rgba(236, 72, 153, 0.2));
   }
 }
 
@@ -221,9 +246,11 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (prefers-color-scheme: dark) {
   .glass {
-    background: rgba(15, 15, 20, 0.8);
-    backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgba(0, 212, 255, 0.2);
+    background: rgba(5, 5, 10, 0.5);
+    backdrop-filter: blur(32px) saturate(150%);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(0, 212, 255, 0.1);
   }
 }
 
