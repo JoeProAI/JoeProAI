@@ -23,42 +23,42 @@ const TEMPLATES: SandboxTemplate[] = [
     id: 'node',
     name: 'Node.js',
     description: 'Node.js + npm/yarn',
-    icon: '🟢',
+    icon: 'box',
     stack: 'node:20-alpine',
   },
   {
     id: 'python',
     name: 'Python',
     description: 'Python 3.11 + pip',
-    icon: '🐍',
+    icon: 'code',
     stack: 'python:3.11-slim',
   },
   {
     id: 'react',
     name: 'React',
     description: 'React + Vite + TypeScript',
-    icon: '⚛️',
+    icon: 'component',
     stack: 'node:20',
   },
   {
     id: 'nextjs',
     name: 'Next.js',
     description: 'Next.js 14 + App Router',
-    icon: '▲',
+    icon: 'layers',
     stack: 'node:20',
   },
   {
     id: 'fullstack',
     name: 'Full Stack',
     description: 'Node + PostgreSQL + Redis',
-    icon: '🚀',
+    icon: 'server',
     stack: 'node:20',
   },
   {
     id: 'ai',
     name: 'AI/ML',
     description: 'Python + Jupyter + TensorFlow',
-    icon: '🤖',
+    icon: 'cpu',
     stack: 'python:3.11',
   },
 ];
@@ -177,7 +177,7 @@ export default function SandboxLauncher() {
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-green-900 dark:text-green-100 mb-1">
-                  🎉 Sandbox Launched Successfully!
+                  Sandbox Launched Successfully
                 </h3>
                 <p className="text-green-700 dark:text-green-300 text-sm mb-3">
                   Your environment is ready. Opening in new tab...

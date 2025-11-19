@@ -15,7 +15,6 @@ const apps = [
     title: 'Chat AI',
     description: 'Conversational AI powered by OpenAI and xAI. Multi-model support with streaming responses.',
     icon: MessageSquare,
-    emoji: '💬',
     href: '/apps/chat',
     color: 'cyan' as const,
   },
@@ -23,7 +22,6 @@ const apps = [
     title: 'Image Generator',
     description: 'Create stunning images from text prompts using state-of-the-art diffusion models.',
     icon: Image,
-    emoji: '🎨',
     href: '/apps/image-gen',
     color: 'pink' as const,
   },
@@ -31,7 +29,6 @@ const apps = [
     title: 'Code Assistant',
     description: 'AI-powered code generation, debugging, and optimization for multiple languages.',
     icon: Code,
-    emoji: '⚡',
     href: '/apps/code',
     color: 'purple' as const,
   },
@@ -39,7 +36,6 @@ const apps = [
     title: 'Custom Agents',
     description: 'Build and deploy specialized AI agents with custom prompts and configurations.',
     icon: Brain,
-    emoji: '🤖',
     href: '/agents',
     color: 'green' as const,
   },
@@ -47,7 +43,6 @@ const apps = [
     title: 'Data Analyzer',
     description: 'Upload and analyze datasets with AI-powered insights and visualizations.',
     icon: Database,
-    emoji: '📊',
     href: '/apps/data',
     color: 'cyan' as const,
   },
@@ -55,7 +50,6 @@ const apps = [
     title: 'Web Scraper',
     description: 'Extract and analyze web content with intelligent parsing and summarization.',
     icon: Globe,
-    emoji: '🌐',
     href: '/apps/scraper',
     color: 'pink' as const,
   },
@@ -63,7 +57,6 @@ const apps = [
     title: 'Prompt Studio',
     description: 'Design, test, and optimize prompts for maximum AI performance.',
     icon: Sparkles,
-    emoji: '✨',
     href: '/apps/prompts',
     color: 'purple' as const,
   },
@@ -71,7 +64,6 @@ const apps = [
     title: 'API Playground',
     description: 'Test and experiment with OpenAI, xAI, and other AI APIs in real-time.',
     icon: Zap,
-    emoji: '🔌',
     href: '/apps/api',
     color: 'green' as const,
   },
@@ -100,7 +92,6 @@ export default function AppsPage() {
               title={app.title}
               description={app.description}
               icon={app.icon}
-              emoji={app.emoji}
               href={app.href}
               color={app.color}
             />

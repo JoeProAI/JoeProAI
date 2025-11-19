@@ -8,7 +8,6 @@ interface GlowCardProps {
   title: string;
   description: string;
   icon: LucideIcon;
-  emoji: string;
   href: string;
   color: 'pink' | 'cyan' | 'purple' | 'green';
 }
@@ -27,7 +26,7 @@ const textColorClasses = {
   green: 'text-neon-green',
 };
 
-export default function GlowCard({ title, description, icon: Icon, emoji, href, color }: GlowCardProps) {
+export default function GlowCard({ title, description, icon: Icon, href, color }: GlowCardProps) {
   return (
     <Link href={href}>
       <motion.div
@@ -35,11 +34,6 @@ export default function GlowCard({ title, description, icon: Icon, emoji, href, 
         whileTap={{ scale: 0.98 }}
         className={`group relative p-6 glass rounded-xl border-2 transition-all duration-300 cursor-pointer ${colorClasses[color]}`}
       >
-        {/* Emoji Sticker */}
-        <div className="absolute -top-4 -right-4 text-4xl animate-float">
-          {emoji}
-        </div>
-
         {/* Icon */}
         <div className={`mb-4 ${textColorClasses[color]}`}>
           <Icon className="w-12 h-12 group-hover:animate-pulse" />
