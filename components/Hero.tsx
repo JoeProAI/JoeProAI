@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Zap, TrendingUp, Database, BarChart3 } from 'lucide-react';
-import DynamicPhrase from './DynamicPhrase';
 
 export default function Hero() {
   return (
@@ -30,11 +29,8 @@ export default function Hero() {
           />
         </motion.div>
 
-        {/* Dynamic Phrase - Random on each load */}
-        <div className="mb-6">
-          <DynamicPhrase />
-        </div>
-
+        {/* Particles spell out text in background - no static headline needed */}
+        
         {/* Subheadline */}
         <motion.p
           initial={{ opacity: 0 }}
