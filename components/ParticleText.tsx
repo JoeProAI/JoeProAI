@@ -52,8 +52,10 @@ export default function ParticleText() {
     if (!ctx) return;
 
     // Set canvas size - ONLY ONCE on mount
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth || 1920;
+    canvas.height = window.innerHeight || 1080;
+    
+    console.log('[ParticleText] Canvas size:', canvas.width, 'x', canvas.height);
 
     // Initialize particles in random positions
     const initParticles = () => {
@@ -121,7 +123,14 @@ export default function ParticleText() {
 
     // Form text with particles
     const formText = (text: string) => {
+      console.log('[ParticleText] Forming text:', text);
       const textPositions = getTextParticles(text);
+      console.log('[ParticleText] Text positions found:', textPositions.length);
+      
+      if (textPositions.length === 0) {
+        console.warn('[ParticleText] No text positions generated! Check canvas size and font rendering.');
+        return;
+      }
       
       // Assign particles to text positions
       const particlesToUse = particlesRef.current.slice(0, Math.min(textPositions.length, particlesRef.current.length));
@@ -133,6 +142,8 @@ export default function ParticleText() {
           particle.inFormation = true;
         }
       });
+      
+      console.log('[ParticleText] Particles in formation:', particlesToUse.length);
       
       // Reset others to random
       particlesRef.current.slice(textPositions.length).forEach(particle => {
@@ -156,6 +167,7 @@ export default function ParticleText() {
     // Start in dissolving state - particles are random
     stateRef.current = 'dissolving';
     timerRef.current = 0;
+    console.log('[ParticleText] Initialized:', particlesRef.current.length, 'particles, state: dissolving');
 
     // Animation loop
     let animationFrameId: number;
@@ -170,15 +182,18 @@ export default function ParticleText() {
       if (stateRef.current === 'dissolving' && timerRef.current > 180) {
         // After 3 seconds of being random, form first phrase
         phraseIndexRef.current = (phraseIndexRef.current + 1) % PHRASES.length;
+        console.log('[ParticleText] State: dissolving -> forming, phrase:', PHRASES[phraseIndexRef.current]);
         formText(PHRASES[phraseIndexRef.current]);
         stateRef.current = 'forming';
         timerRef.current = 0;
       } else if (stateRef.current === 'forming' && timerRef.current > 120) {
         // After 2 seconds of forming, hold
+        console.log('[ParticleText] State: forming -> holding');
         stateRef.current = 'holding';
         timerRef.current = 0;
       } else if (stateRef.current === 'holding' && timerRef.current > 180) {
         // After 3 seconds of holding, dissolve
+        console.log('[ParticleText] State: holding -> dissolving');
         stateRef.current = 'dissolving';
         timerRef.current = 0;
         dissolveText();
