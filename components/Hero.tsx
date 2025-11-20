@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Zap, TrendingUp, Database, BarChart3 } from 'lucide-react';
-import ReactiveText from './ReactiveText';
+import DynamicPhrase from './DynamicPhrase';
 
 export default function Hero() {
   return (
@@ -30,27 +30,10 @@ export default function Hero() {
           />
         </motion.div>
 
-        {/* Main Headline */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
-          className="relative mb-6"
-        >
-          <ReactiveText 
-            as="h1" 
-            className="text-6xl md:text-7xl lg:text-9xl font-black leading-[0.95] tracking-[-0.04em] text-gradient inline-block"
-          >
-            SHIP FASTER
-          </ReactiveText>
-          <motion.div
-            className="absolute -right-4 top-1/2 -translate-y-1/2 text-[var(--primary)] opacity-60"
-            animate={{ x: [0, 12, 0], opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <ArrowRight className="w-16 h-16 md:w-20 md:h-20" />
-          </motion.div>
-        </motion.div>
+        {/* Dynamic Phrase - Random on each load */}
+        <div className="mb-6">
+          <DynamicPhrase />
+        </div>
 
         {/* Subheadline */}
         <motion.p

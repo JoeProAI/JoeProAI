@@ -54,33 +54,32 @@ export default function NeuralNetworkInteractive() {
     updateSize();
     window.addEventListener('resize', updateSize);
 
-    // Initialize smaller, more numerous nodes
-    if (nodesRef.current.length === 0) {
-      for (let i = 0; i < 150; i++) {
-        const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-        nodesRef.current.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          radius: Math.random() * 1.5 + 0.8, // Smaller: 0.8-2.3px
-          color: color.main,
-          glowColor: color.glow,
-        });
-      }
+    // Initialize smaller, more numerous nodes - ALWAYS RANDOMIZE on each mount
+    // This makes the network different every time you load the page
+    nodesRef.current = [];
+    for (let i = 0; i < 150; i++) {
+      const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      nodesRef.current.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        radius: Math.random() * 1.5 + 0.8, // Smaller: 0.8-2.3px
+        color: color.main,
+        glowColor: color.glow,
+      });
     }
 
-    // Initialize gravitational attractors
-    if (attractorsRef.current.length === 0) {
-      for (let i = 0; i < 5; i++) {
-        attractorsRef.current.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          targetX: Math.random() * canvas.width,
-          targetY: Math.random() * canvas.height,
-          strength: Math.random() * 0.5 + 0.3,
-        });
-      }
+    // Initialize gravitational attractors - ALWAYS RANDOMIZE
+    attractorsRef.current = [];
+    for (let i = 0; i < 5; i++) {
+      attractorsRef.current.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        targetX: Math.random() * canvas.width,
+        targetY: Math.random() * canvas.height,
+        strength: Math.random() * 0.5 + 0.3,
+      });
     }
 
     // Mouse move handler
