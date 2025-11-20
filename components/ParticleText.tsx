@@ -62,15 +62,15 @@ export default function ParticleText() {
     // Initialize particles in random positions
     const initParticles = () => {
       particlesRef.current = [];
-      for (let i = 0; i < 800; i++) {
+      for (let i = 0; i < 500; i++) {
         const color = COLORS[Math.floor(Math.random() * COLORS.length)];
         const randomX = Math.random() * canvas.width;
         const randomY = Math.random() * canvas.height;
         particlesRef.current.push({
           x: randomX,
           y: randomY,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
+          vx: (Math.random() - 0.5) * 0.1, // Much slower initial velocity
+          vy: (Math.random() - 0.5) * 0.1,
           targetX: randomX, // Start with target = current position
           targetY: randomY,
           originalX: randomX,
@@ -170,8 +170,8 @@ export default function ParticleText() {
       timerRef.current++;
 
       // State machine
-      if (stateRef.current === 'dissolving' && timerRef.current > 90) {
-        // After 1.5 seconds of being random, form first phrase
+      if (stateRef.current === 'dissolving' && timerRef.current > 180) {
+        // After 3 seconds of being random, form first phrase
         phraseIndexRef.current = (phraseIndexRef.current + 1) % PHRASES.length;
         formText(PHRASES[phraseIndexRef.current]);
         stateRef.current = 'forming';
@@ -199,14 +199,14 @@ export default function ParticleText() {
           particle.vx += dx * 0.01;
           particle.vy += dy * 0.01;
         } else if (!particle.inFormation) {
-          // Weak attraction to random position
-          particle.vx += dx * 0.002;
-          particle.vy += dy * 0.002;
+          // VERY weak attraction when dissolved - almost none
+          particle.vx += dx * 0.0005;
+          particle.vy += dy * 0.0005;
         }
 
-        // Apply damping
-        particle.vx *= 0.95;
-        particle.vy *= 0.95;
+        // Apply strong damping to slow particles down
+        particle.vx *= 0.92;
+        particle.vy *= 0.92;
 
         // Update position
         particle.x += particle.vx;
@@ -228,24 +228,34 @@ export default function ParticleText() {
         ctx.shadowBlur = 0;
       });
 
-      // Draw connections between nearby particles
-      ctx.strokeStyle = 'rgba(0, 212, 255, 0.1)';
-      ctx.lineWidth = 0.5;
-      for (let i = 0; i < particlesRef.current.length; i++) {
-        for (let j = i + 1; j < particlesRef.current.length; j++) {
-          const p1 = particlesRef.current[i];
-          const p2 = particlesRef.current[j];
-          const dx = p2.x - p1.x;
-          const dy = p2.y - p1.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+      // Draw connections between nearby particles (ONLY if in formation)
+      // Skip connections during dissolving state to avoid crazy web
+      if (stateRef.current === 'forming' || stateRef.current === 'holding') {
+        ctx.strokeStyle = 'rgba(0, 212, 255, 0.05)';
+        ctx.lineWidth = 0.3;
+        for (let i = 0; i < particlesRef.current.length; i++) {
+          // Only draw a few connections per particle to reduce web chaos
+          if (!particlesRef.current[i].inFormation) continue;
+          
+          let connectionsDrawn = 0;
+          for (let j = i + 1; j < particlesRef.current.length && connectionsDrawn < 3; j++) {
+            const p1 = particlesRef.current[i];
+            const p2 = particlesRef.current[j];
+            if (!p2.inFormation) continue;
+            
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 80) {
-            const opacity = (80 - dist) / 80;
-            ctx.strokeStyle = `rgba(0, 212, 255, ${opacity * 0.2})`;
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
+            if (dist < 60) {
+              const opacity = (60 - dist) / 60;
+              ctx.strokeStyle = `rgba(0, 212, 255, ${opacity * 0.1})`;
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+              connectionsDrawn++;
+            }
           }
         }
       }
