@@ -31,27 +31,26 @@ export default function Hero() {
         </motion.div>
 
         {/* Main Headline */}
-        <motion.h1
+        <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
-          className="text-6xl md:text-7xl lg:text-8xl font-black mb-6 leading-[1.05] tracking-[-0.04em] text-balance relative"
+          className="relative mb-6"
         >
-          <ReactiveText as="span" className="text-foreground inline-block">
-            Accelerate Everything
-          </ReactiveText>
-          <br />
-          <ReactiveText as="span" className="text-gradient inline-block relative">
-            Ship Faster
+          <ReactiveText 
+            as="h1" 
+            className="text-6xl md:text-7xl lg:text-9xl font-black leading-[0.95] tracking-[-0.04em] text-gradient inline-block"
+          >
+            SHIP FASTER
           </ReactiveText>
           <motion.div
-            className="absolute -right-2 top-0 text-[var(--primary)] opacity-60"
-            animate={{ x: [0, 8, 0], opacity: [0.4, 1, 0.4] }}
+            className="absolute -right-4 top-1/2 -translate-y-1/2 text-[var(--primary)] opacity-60"
+            animate={{ x: [0, 12, 0], opacity: [0.4, 1, 0.4] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            <ArrowRight className="w-12 h-12 md:w-16 md:h-16" />
+            <ArrowRight className="w-16 h-16 md:w-20 md:h-20" />
           </motion.div>
-        </motion.h1>
+        </motion.div>
 
         {/* Subheadline */}
         <motion.p

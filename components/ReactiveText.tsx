@@ -62,9 +62,16 @@ export default function ReactiveText({ children, className = '', as: Tag = 'span
           }
         });
 
-        // Calculate glow based on proximity
-        const glowIntensity = Math.min(totalIntensity * 0.8, 1);
-        const glowSize = 10 + (glowIntensity * 30);
+        // Calculate glow based on proximity - MUCH MORE DRAMATIC
+        const glowIntensity = Math.min(totalIntensity * 2, 1);
+        const glowSize = 20 + (glowIntensity * 60); // Bigger glow range
+        
+        // Holographic color shift - add complementary colors
+        const holographicColors = [
+          dominantColor,
+          closestColor,
+          '#ffffff' // Add white for holographic shimmer
+        ];
         
         // Create directional shadow based on closest node position
         if (elementRef.current) {
@@ -79,27 +86,41 @@ export default function ReactiveText({ children, className = '', as: Tag = 'span
           if (closestNode && closestNode.dist < 200) {
             const dx = closestNode.node.x - (rect.left + rect.width / 2);
             const dy = closestNode.node.y - (rect.top + rect.height / 2);
-            const offsetX = Math.max(-2, Math.min(2, dx * 0.01));
-            const offsetY = Math.max(-2, Math.min(2, dy * 0.01));
+            const offsetX = Math.max(-4, Math.min(4, dx * 0.02));
+            const offsetY = Math.max(-4, Math.min(4, dy * 0.02));
 
+            // Multi-layer holographic glow
             setGlowStyle({
-              filter: `drop-shadow(${offsetX}px ${offsetY}px ${glowSize}px ${dominantColor})`,
-              transition: 'filter 0.15s ease-out',
+              filter: `
+                drop-shadow(${offsetX}px ${offsetY}px ${glowSize * 0.5}px ${dominantColor})
+                drop-shadow(${offsetX * 1.5}px ${offsetY * 1.5}px ${glowSize}px ${dominantColor})
+                drop-shadow(0 0 ${glowSize * 0.8}px ${closestColor})
+                drop-shadow(0 0 ${glowSize * 1.2}px rgba(255, 255, 255, ${glowIntensity * 0.3}))
+              `,
+              color: `${dominantColor}`,
+              textShadow: `0 0 ${glowSize * 0.3}px ${dominantColor}`,
+              transition: 'filter 0.1s ease-out, color 0.1s ease-out, text-shadow 0.1s ease-out',
             });
             return;
           }
         }
 
-        // Default glow without direction
+        // Default glow without direction - still dramatic
         setGlowStyle({
-          filter: `drop-shadow(0 0 ${glowSize}px ${dominantColor})`,
-          transition: 'filter 0.15s ease-out',
+          filter: `
+            drop-shadow(0 0 ${glowSize * 0.6}px ${dominantColor})
+            drop-shadow(0 0 ${glowSize}px ${dominantColor})
+            drop-shadow(0 0 ${glowSize * 1.2}px rgba(255, 255, 255, ${glowIntensity * 0.2}))
+          `,
+          color: `${dominantColor}`,
+          textShadow: `0 0 ${glowSize * 0.3}px ${dominantColor}`,
+          transition: 'filter 0.1s ease-out, color 0.1s ease-out, text-shadow 0.1s ease-out',
         });
       } else {
-        // No nodes nearby - remove glow
+        // No nodes nearby - keep original color
         setGlowStyle({
-          filter: 'drop-shadow(0 0 0px transparent)',
-          transition: 'filter 0.3s ease-out',
+          filter: 'none',
+          transition: 'filter 0.2s ease-out, color 0.2s ease-out, text-shadow 0.2s ease-out',
         });
       }
     };
