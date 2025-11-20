@@ -64,15 +64,17 @@ export default function ParticleText() {
       particlesRef.current = [];
       for (let i = 0; i < 800; i++) {
         const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+        const randomX = Math.random() * canvas.width;
+        const randomY = Math.random() * canvas.height;
         particlesRef.current.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
+          x: randomX,
+          y: randomY,
           vx: (Math.random() - 0.5) * 0.5,
           vy: (Math.random() - 0.5) * 0.5,
-          targetX: 0,
-          targetY: 0,
-          originalX: Math.random() * canvas.width,
-          originalY: Math.random() * canvas.height,
+          targetX: randomX, // Start with target = current position
+          targetY: randomY,
+          originalX: randomX,
+          originalY: randomY,
           radius: Math.random() * 1.5 + 0.5,
           color: color.main,
           glowColor: color.glow,
@@ -155,9 +157,9 @@ export default function ParticleText() {
       });
     };
 
-    // Start with first phrase
-    formText(PHRASES[0]);
-    stateRef.current = 'forming';
+    // Start in dissolving state - particles are random
+    stateRef.current = 'dissolving';
+    timerRef.current = 0;
 
     // Animation loop
     const animate = () => {
@@ -168,7 +170,13 @@ export default function ParticleText() {
       timerRef.current++;
 
       // State machine
-      if (stateRef.current === 'forming' && timerRef.current > 120) {
+      if (stateRef.current === 'dissolving' && timerRef.current > 90) {
+        // After 1.5 seconds of being random, form first phrase
+        phraseIndexRef.current = (phraseIndexRef.current + 1) % PHRASES.length;
+        formText(PHRASES[phraseIndexRef.current]);
+        stateRef.current = 'forming';
+        timerRef.current = 0;
+      } else if (stateRef.current === 'forming' && timerRef.current > 120) {
         // After 2 seconds of forming, hold
         stateRef.current = 'holding';
         timerRef.current = 0;
@@ -177,12 +185,6 @@ export default function ParticleText() {
         stateRef.current = 'dissolving';
         timerRef.current = 0;
         dissolveText();
-      } else if (stateRef.current === 'dissolving' && timerRef.current > 120) {
-        // After 2 seconds of dissolving, form next phrase
-        phraseIndexRef.current = (phraseIndexRef.current + 1) % PHRASES.length;
-        formText(PHRASES[phraseIndexRef.current]);
-        stateRef.current = 'forming';
-        timerRef.current = 0;
       }
 
       // Update and draw particles
