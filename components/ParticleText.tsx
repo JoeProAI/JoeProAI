@@ -51,13 +51,9 @@ export default function ParticleText() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size
-    const updateSize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    updateSize();
-    window.addEventListener('resize', updateSize);
+    // Set canvas size - ONLY ONCE on mount
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
     // Initialize particles in random positions
     const initParticles = () => {
@@ -162,6 +158,7 @@ export default function ParticleText() {
     timerRef.current = 0;
 
     // Animation loop
+    let animationFrameId: number;
     const animate = () => {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -260,13 +257,16 @@ export default function ParticleText() {
         }
       }
 
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
-      window.removeEventListener('resize', updateSize);
+      // Cancel animation frame to prevent memory leaks
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
   }, []);
 
@@ -274,7 +274,12 @@ export default function ParticleText() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 z-0 pointer-events-none"
-      style={{ background: 'radial-gradient(ellipse at top, #001020 0%, #000000 50%, #000000 100%)' }}
+      style={{ 
+        background: 'radial-gradient(ellipse at top, #001020 0%, #000000 50%, #000000 100%)',
+        pointerEvents: 'none',
+        touchAction: 'none',
+        userSelect: 'none',
+      }}
     />
   );
 }
