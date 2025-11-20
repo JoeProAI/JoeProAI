@@ -51,9 +51,9 @@ export default function ParticleText() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size - ONLY ONCE on mount
-    canvas.width = window.innerWidth || 1920;
-    canvas.height = window.innerHeight || 1080;
+    // Set canvas size - use fallback if needed
+    canvas.width = window.innerWidth > 0 ? window.innerWidth : 1920;
+    canvas.height = window.innerHeight > 0 ? window.innerHeight : 1080;
     
     console.log('[ParticleText] Canvas size:', canvas.width, 'x', canvas.height);
 
@@ -174,6 +174,13 @@ export default function ParticleText() {
     const animate = () => {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // DEBUG: Show current state and timer
+      const inFormationCount = particlesRef.current.filter(p => p.inFormation).length;
+      ctx.fillStyle = 'rgba(0, 255, 0, 0.8)';
+      ctx.font = '16px monospace';
+      ctx.fillText(`State: ${stateRef.current} | Timer: ${timerRef.current}`, 10, 25);
+      ctx.fillText(`Phrase: ${PHRASES[phraseIndexRef.current]} | In Formation: ${inFormationCount}/${particlesRef.current.length}`, 10, 50);
 
       // Update state timer
       timerRef.current++;
