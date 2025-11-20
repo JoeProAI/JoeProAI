@@ -77,8 +77,8 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: text-shimmer 5.7s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite, 
-             text-glow-organic 7.3s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+  animation: text-shimmer 5.7s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  /* Glow is now reactive via ReactiveText component */
 }
 
 @keyframes text-shimmer {

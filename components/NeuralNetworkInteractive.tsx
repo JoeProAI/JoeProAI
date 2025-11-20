@@ -12,6 +12,14 @@ interface Node {
   glowColor: string;
 }
 
+interface Attractor {
+  x: number;
+  y: number;
+  targetX: number;
+  targetY: number;
+  strength: number;
+}
+
 const COLORS = [
   { main: '#00d4ff', glow: 'rgba(0, 212, 255' }, // Cyan
   { main: '#0066ff', glow: 'rgba(0, 102, 255' }, // Blue
@@ -21,10 +29,14 @@ const COLORS = [
   { main: '#f59e0b', glow: 'rgba(245, 158, 11' }, // Orange
 ];
 
+// Export node positions for text reactivity
+export let globalNodePositions: Node[] = [];
+
 export default function NeuralNetworkInteractive() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const nodesRef = useRef<Node[]>([]);
+  const attractorsRef = useRef<Attractor[]>([]);
   const animationRef = useRef<number>();
 
   useEffect(() => {
@@ -42,18 +54,31 @@ export default function NeuralNetworkInteractive() {
     updateSize();
     window.addEventListener('resize', updateSize);
 
-    // Initialize nodes with random colors
+    // Initialize smaller, more numerous nodes
     if (nodesRef.current.length === 0) {
-      for (let i = 0; i < 60; i++) {
+      for (let i = 0; i < 150; i++) {
         const color = COLORS[Math.floor(Math.random() * COLORS.length)];
         nodesRef.current.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          radius: Math.random() * 3 + 2,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          radius: Math.random() * 1.5 + 0.8, // Smaller: 0.8-2.3px
           color: color.main,
           glowColor: color.glow,
+        });
+      }
+    }
+
+    // Initialize gravitational attractors
+    if (attractorsRef.current.length === 0) {
+      for (let i = 0; i < 5; i++) {
+        attractorsRef.current.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          targetX: Math.random() * canvas.width,
+          targetY: Math.random() * canvas.height,
+          strength: Math.random() * 0.5 + 0.3,
         });
       }
     }
@@ -73,36 +98,71 @@ export default function NeuralNetworkInteractive() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const nodes = nodesRef.current;
+      const attractors = attractorsRef.current;
+
+      // Update attractors - move towards target and pick new targets
+      attractors.forEach((attractor) => {
+        const dx = attractor.targetX - attractor.x;
+        const dy = attractor.targetY - attractor.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Move towards target
+        attractor.x += dx * 0.001;
+        attractor.y += dy * 0.001;
+
+        // If close to target, pick new random target
+        if (dist < 50) {
+          attractor.targetX = Math.random() * canvas.width;
+          attractor.targetY = Math.random() * canvas.height;
+        }
+      });
 
       // Update and draw nodes
       nodes.forEach((node, i) => {
-        // Move nodes
+        // Apply gravitational forces from attractors
+        attractors.forEach((attractor) => {
+          const dx = attractor.x - node.x;
+          const dy = attractor.y - node.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < 300 && dist > 10) {
+            const force = attractor.strength / (dist * 0.1);
+            node.vx += (dx / dist) * force * 0.01;
+            node.vy += (dy / dist) * force * 0.01;
+          }
+        });
+
+        // Move nodes with damping
+        node.vx *= 0.99;
+        node.vy *= 0.99;
         node.x += node.vx;
         node.y += node.vy;
 
-        // Bounce off edges
-        if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
-        if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+        // Wrap around edges instead of bouncing
+        if (node.x < 0) node.x = canvas.width;
+        if (node.x > canvas.width) node.x = 0;
+        if (node.y < 0) node.y = canvas.height;
+        if (node.y > canvas.height) node.y = 0;
 
-        // Mouse attraction
+        // Mouse attraction (weaker)
         const dx = mousePos.x - node.x;
         const dy = mousePos.y - node.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         
-        if (dist < 150) {
-          const force = (150 - dist) / 150;
-          node.x += dx * force * 0.03;
-          node.y += dy * force * 0.03;
+        if (dist < 120) {
+          const force = (120 - dist) / 120;
+          node.x += dx * force * 0.02;
+          node.y += dy * force * 0.02;
         }
 
-        // Draw connections to nearby nodes
+        // Draw connections to nearby nodes (shorter distance for smaller nodes)
         nodes.slice(i + 1).forEach((otherNode) => {
           const dx = otherNode.x - node.x;
           const dy = otherNode.y - node.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 150) {
-            const opacity = (1 - distance / 150) * 0.5;
+          if (distance < 100) {
+            const opacity = (1 - distance / 100) * 0.4;
             
             // Check if line passes near mouse
             const mouseDistToLine = distanceToLine(
@@ -118,7 +178,7 @@ export default function NeuralNetworkInteractive() {
             gradient.addColorStop(0, `${node.glowColor}, ${opacity * glowMultiplier})`);
             gradient.addColorStop(1, `${otherNode.glowColor}, ${opacity * glowMultiplier})`);
             ctx.strokeStyle = gradient;
-            ctx.lineWidth = mouseDistToLine < 50 ? 0.8 : 0.4;
+            ctx.lineWidth = mouseDistToLine < 50 ? 0.5 : 0.25;
             ctx.beginPath();
             ctx.moveTo(node.x, node.y);
             ctx.lineTo(otherNode.x, otherNode.y);
@@ -126,26 +186,26 @@ export default function NeuralNetworkInteractive() {
           }
         });
 
-        // Draw node
+        // Draw node (smaller scale for smaller nodes)
         const mouseDist = Math.sqrt(
           Math.pow(mousePos.x - node.x, 2) + Math.pow(mousePos.y - node.y, 2)
         );
         
-        const scale = mouseDist < 100 ? 1 + (100 - mouseDist) / 100 : 1;
-        const glowSize = mouseDist < 100 ? 20 : 10;
+        const scale = mouseDist < 80 ? 1 + (80 - mouseDist) / 80 : 1;
+        const glowSize = mouseDist < 80 ? 12 : 6;
 
-        // Glow
+        // Glow (more subtle for smaller nodes)
         const gradient = ctx.createRadialGradient(
           node.x, node.y, 0,
-          node.x, node.y, node.radius * scale * 3
+          node.x, node.y, node.radius * scale * 4
         );
-        gradient.addColorStop(0, `${node.glowColor}, 0.8)`);
-        gradient.addColorStop(0.5, `${node.glowColor}, 0.4)`);
+        gradient.addColorStop(0, `${node.glowColor}, 0.7)`);
+        gradient.addColorStop(0.5, `${node.glowColor}, 0.35)`);
         gradient.addColorStop(1, `${node.glowColor}, 0)`);
         
         ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius * scale * 3, 0, Math.PI * 2);
+        ctx.arc(node.x, node.y, node.radius * scale * 4, 0, Math.PI * 2);
         ctx.fill();
 
         // Core
@@ -157,6 +217,9 @@ export default function NeuralNetworkInteractive() {
         ctx.fill();
         ctx.shadowBlur = 0;
       });
+
+      // Update global positions for text reactivity
+      globalNodePositions = [...nodes];
 
       animationRef.current = requestAnimationFrame(animate);
     };

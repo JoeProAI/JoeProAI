@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Zap, TrendingUp, Database, BarChart3 } from 'lucide-react';
+import ReactiveText from './ReactiveText';
 
 export default function Hero() {
   return (
@@ -36,20 +37,20 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-6xl md:text-7xl lg:text-8xl font-black mb-6 leading-[1.05] tracking-[-0.04em] text-balance relative"
         >
-          <span className="text-foreground inline-block">
+          <ReactiveText as="span" className="text-foreground inline-block">
             Accelerate Everything
-          </span>
+          </ReactiveText>
           <br />
-          <span className="text-gradient inline-block relative">
+          <ReactiveText as="span" className="text-gradient inline-block relative">
             Ship Faster
-            <motion.div
-              className="absolute -right-2 top-0 text-[var(--primary)] opacity-60"
-              animate={{ x: [0, 8, 0], opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              <ArrowRight className="w-12 h-12 md:w-16 md:h-16" />
-            </motion.div>
-          </span>
+          </ReactiveText>
+          <motion.div
+            className="absolute -right-2 top-0 text-[var(--primary)] opacity-60"
+            animate={{ x: [0, 8, 0], opacity: [0.4, 1, 0.4] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <ArrowRight className="w-12 h-12 md:w-16 md:h-16" />
+          </motion.div>
         </motion.h1>
 
         {/* Subheadline */}
