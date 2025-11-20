@@ -89,9 +89,11 @@ export default function SandboxLauncher() {
       
       if (data.sandbox) {
         setLaunched(data.sandbox);
-        // Auto-open in new tab after 2 seconds
+        // Store sandbox data in sessionStorage for launch page
+        sessionStorage.setItem(`sandbox-${data.sandbox.id}`, JSON.stringify(data.sandbox));
+        // Redirect to launch page after 2 seconds
         setTimeout(() => {
-          window.open(data.sandbox.url, '_blank');
+          window.location.href = `/sandbox/${data.sandbox.id}`;
         }, 2000);
       }
     } catch (error) {
