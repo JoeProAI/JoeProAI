@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Particle {
   x: number;
@@ -9,40 +9,36 @@ interface Particle {
   vy: number;
   targetX: number;
   targetY: number;
-  originalX: number;
-  originalY: number;
   radius: number;
   color: string;
   glowColor: string;
-  inFormation: boolean;
+}
+
+interface Node {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  radius: number;
+  color: string;
 }
 
 const COLORS = [
-  { main: '#00d4ff', glow: 'rgba(0, 212, 255, 0.6)' },   // Cyan
-  { main: '#0066ff', glow: 'rgba(0, 102, 255, 0.6)' },   // Blue
-  { main: '#a855f7', glow: 'rgba(168, 85, 247, 0.6)' },  // Purple
-  { main: '#ec4899', glow: 'rgba(236, 72, 153, 0.6)' },  // Pink
-  { main: '#10b981', glow: 'rgba(16, 185, 129, 0.6)' },  // Green
-  { main: '#f59e0b', glow: 'rgba(245, 158, 11, 0.6)' },  // Orange
+  { main: '#00d4ff', glow: 'rgba(0, 212, 255, 0.6)' },
+  { main: '#0066ff', glow: 'rgba(0, 102, 255, 0.6)' },
+  { main: '#a855f7', glow: 'rgba(168, 85, 247, 0.6)' },
+  { main: '#ec4899', glow: 'rgba(236, 72, 153, 0.6)' },
+  { main: '#10b981', glow: 'rgba(16, 185, 129, 0.6)' },
+  { main: '#f59e0b', glow: 'rgba(245, 158, 11, 0.6)' },
 ];
 
-const PHRASES = [
-  'SHIP FAST',
-  'BUILD NOW',
-  'INFERENCE',
-  'DEPLOY AI',
-  'SCALE UP',
-  'TRAIN MODEL',
-  'AUTOMATE',
-  'OPTIMIZE',
-];
+const WORDS = ['SHIP', 'BUILD', 'FAST', 'AI', 'CODE', 'DEPLOY', 'SCALE', 'TRAIN'];
 
 export default function ParticleText() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
-  const phraseIndexRef = useRef(0);
-  const stateRef = useRef<'forming' | 'holding' | 'dissolving'>('forming');
-  const timerRef = useRef(0);
+  const nodesRef = useRef<Node[]>([]);
+  const mouseRef = useRef({ x: -1000, y: -1000 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -51,187 +47,179 @@ export default function ParticleText() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size - use fallback if needed
-    canvas.width = window.innerWidth > 0 ? window.innerWidth : 1920;
-    canvas.height = window.innerHeight > 0 ? window.innerHeight : 1080;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    // Initialize particles in random positions
-    const initParticles = () => {
-      particlesRef.current = [];
-      for (let i = 0; i < 2000; i++) {
-        const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-        const randomX = Math.random() * canvas.width;
-        const randomY = Math.random() * canvas.height;
-        particlesRef.current.push({
-          x: randomX,
-          y: randomY,
-          vx: (Math.random() - 0.5) * 0.1, // Much slower initial velocity
-          vy: (Math.random() - 0.5) * 0.1,
-          targetX: randomX, // Start with target = current position
-          targetY: randomY,
-          originalX: randomX,
-          originalY: randomY,
-          radius: Math.random() * 2 + 1,
-          color: color.main,
-          glowColor: color.glow,
-          inFormation: false,
-        });
-      }
+    // Mouse tracking
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current.x = e.clientX - rect.left;
+      mouseRef.current.y = e.clientY - rect.top;
     };
-    initParticles();
+    canvas.addEventListener('mousemove', handleMouseMove);
 
-    // Create text particles from canvas text
-    const getTextParticles = (text: string): { x: number; y: number }[] => {
+    // Create text particles at a specific position
+    const createWordParticles = (text: string, centerX: number, centerY: number): Particle[] => {
       const tempCanvas = document.createElement('canvas');
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return [];
 
-      // Set up temporary canvas for text
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
-      
-      // Draw text
-      const fontSize = Math.min(canvas.width * 0.15, 150);
+      const fontSize = 40;
+      tempCtx.font = `900 ${fontSize}px Arial`;
+      const metrics = tempCtx.measureText(text);
+      const textWidth = metrics.width;
+      const textHeight = fontSize;
+
+      tempCanvas.width = textWidth + 20;
+      tempCanvas.height = textHeight + 20;
+
       tempCtx.font = `900 ${fontSize}px Arial`;
       tempCtx.textAlign = 'center';
       tempCtx.textBaseline = 'middle';
       tempCtx.fillStyle = 'white';
-      tempCtx.fillText(text, canvas.width / 2, canvas.height / 2);
+      tempCtx.fillText(text, tempCanvas.width / 2, tempCanvas.height / 2);
 
-      // Get pixel data
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
       const pixels = imageData.data;
-      const positions: { x: number; y: number }[] = [];
+      const particles: Particle[] = [];
 
-      // Sample pixels (skip some for performance)
-      const skip = 4;
+      const skip = 3;
       for (let y = 0; y < tempCanvas.height; y += skip) {
         for (let x = 0; x < tempCanvas.width; x += skip) {
           const index = (y * tempCanvas.width + x) * 4;
           const alpha = pixels[index + 3];
-          
+
           if (alpha > 128) {
-            positions.push({ x, y });
+            const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+            const actualX = centerX - tempCanvas.width / 2 + x;
+            const actualY = centerY - tempCanvas.height / 2 + y;
+            particles.push({
+              x: actualX,
+              y: actualY,
+              vx: 0,
+              vy: 0,
+              targetX: actualX,
+              targetY: actualY,
+              radius: Math.random() * 1.5 + 1,
+              color: color.main,
+              glowColor: color.glow,
+            });
           }
         }
       }
 
-      return positions;
+      return particles;
     };
 
-    // Form text with particles
-    const formText = (text: string) => {
-      const textPositions = getTextParticles(text);
-      
-      if (textPositions.length === 0) {
-        return;
+    // Initialize multiple word formations scattered across page
+    const initParticles = () => {
+      const wordCount = 6;
+      const margin = 150;
+
+      for (let i = 0; i < wordCount; i++) {
+        const word = WORDS[i % WORDS.length];
+        const x = margin + Math.random() * (canvas.width - margin * 2);
+        const y = margin + Math.random() * (canvas.height - margin * 2);
+        const wordParticles = createWordParticles(word, x, y);
+        particlesRef.current.push(...wordParticles);
       }
-      
-      // Assign particles to text positions
-      const particlesToUse = particlesRef.current.slice(0, Math.min(textPositions.length, particlesRef.current.length));
-      
-      particlesToUse.forEach((particle, i) => {
-        if (i < textPositions.length) {
-          particle.targetX = textPositions[i].x;
-          particle.targetY = textPositions[i].y;
-          particle.inFormation = true;
-        }
-      });
-      
-      // Reset others to random
-      particlesRef.current.slice(textPositions.length).forEach(particle => {
-        particle.inFormation = false;
-        particle.targetX = particle.originalX;
-        particle.targetY = particle.originalY;
-      });
     };
+    initParticles();
 
-    // Dissolve text - particles drift to random gravity points
-    const dissolveText = () => {
-      particlesRef.current.forEach(particle => {
-        particle.inFormation = false;
-        // Each particle gets a unique random target far from current position
-        const angle = Math.random() * Math.PI * 2;
-        const distance = canvas.width * 0.3 + Math.random() * canvas.width * 0.4;
-        particle.targetX = particle.x + Math.cos(angle) * distance;
-        particle.targetY = particle.y + Math.sin(angle) * distance;
-        
-        // Wrap targets around screen edges
-        if (particle.targetX < 0) particle.targetX += canvas.width;
-        if (particle.targetX > canvas.width) particle.targetX -= canvas.width;
-        if (particle.targetY < 0) particle.targetY += canvas.height;
-        if (particle.targetY > canvas.height) particle.targetY -= canvas.height;
-        
-        particle.originalX = particle.targetX;
-        particle.originalY = particle.targetY;
-      });
+    // Initialize neural network nodes
+    const initNodes = () => {
+      for (let i = 0; i < 80; i++) {
+        nodesRef.current.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          radius: Math.random() * 2 + 1.5,
+          color: COLORS[Math.floor(Math.random() * COLORS.length)].main,
+        });
+      }
     };
-
-    // Start in dissolving state - particles are random
-    stateRef.current = 'dissolving';
-    timerRef.current = 0;
+    initNodes();
 
     // Animation loop
     let animationFrameId: number;
     const animate = () => {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.03)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Update state timer
-      timerRef.current++;
-
-      // State machine
-      if (stateRef.current === 'dissolving' && timerRef.current > 240) {
-        // After 4 seconds of drifting, form next phrase
-        phraseIndexRef.current = (phraseIndexRef.current + 1) % PHRASES.length;
-        formText(PHRASES[phraseIndexRef.current]);
-        stateRef.current = 'forming';
-        timerRef.current = 0;
-      } else if (stateRef.current === 'forming' && timerRef.current > 150) {
-        // After 2.5 seconds of forming, hold
-        stateRef.current = 'holding';
-        timerRef.current = 0;
-      } else if (stateRef.current === 'holding' && timerRef.current > 240) {
-        // After 4 seconds of holding, dissolve
-        stateRef.current = 'dissolving';
-        timerRef.current = 0;
-        dissolveText();
-      }
-
-      // Update and draw particles
-      particlesRef.current.forEach((particle) => {
-        // Move toward target
-        const dx = particle.targetX - particle.x;
-        const dy = particle.targetY - particle.y;
+      // Update and draw nodes with mouse interaction
+      nodesRef.current.forEach((node) => {
+        // Mouse attraction
+        const dx = mouseRef.current.x - node.x;
+        const dy = mouseRef.current.y - node.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (particle.inFormation && dist > 1) {
-          // Strong attraction to formation position
-          particle.vx += dx * 0.01;
-          particle.vy += dy * 0.01;
-        } else if (!particle.inFormation) {
-          // Extremely weak drift to gravity point - very slow
-          particle.vx += dx * 0.0001;
-          particle.vy += dy * 0.0001;
+        if (dist < 200 && dist > 0) {
+          const force = (200 - dist) / 200;
+          node.vx += (dx / dist) * force * 0.3;
+          node.vy += (dy / dist) * force * 0.3;
         }
 
-        // Apply damping - stronger when in formation for stability
-        const damping = particle.inFormation ? 0.92 : 0.95;
-        particle.vx *= damping;
-        particle.vy *= damping;
+        // Apply velocity
+        node.x += node.vx;
+        node.y += node.vy;
 
-        // Update position
+        // Damping
+        node.vx *= 0.95;
+        node.vy *= 0.95;
+
+        // Bounce off edges
+        if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+        if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+        node.x = Math.max(0, Math.min(canvas.width, node.x));
+        node.y = Math.max(0, Math.min(canvas.height, node.y));
+
+        // Draw node
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = node.color;
+        ctx.fillStyle = node.color;
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      // Draw connections between nodes
+      ctx.strokeStyle = 'rgba(0, 212, 255, 0.1)';
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < nodesRef.current.length; i++) {
+        for (let j = i + 1; j < nodesRef.current.length; j++) {
+          const n1 = nodesRef.current[i];
+          const n2 = nodesRef.current[j];
+          const dx = n2.x - n1.x;
+          const dy = n2.y - n1.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 120) {
+            const opacity = (120 - dist) / 120;
+            ctx.strokeStyle = `rgba(0, 212, 255, ${opacity * 0.15})`;
+            ctx.beginPath();
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(n2.x, n2.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw particles (word formations)
+      particlesRef.current.forEach((particle) => {
+        // Gentle drift toward target
+        const dx = particle.targetX - particle.x;
+        const dy = particle.targetY - particle.y;
+        particle.vx += dx * 0.001;
+        particle.vy += dy * 0.001;
+        particle.vx *= 0.98;
+        particle.vy *= 0.98;
         particle.x += particle.vx;
         particle.y += particle.vy;
 
-        // Wrap around edges
-        if (particle.x < 0) particle.x = canvas.width;
-        if (particle.x > canvas.width) particle.x = 0;
-        if (particle.y < 0) particle.y = canvas.height;
-        if (particle.y > canvas.height) particle.y = 0;
-
-        // Draw particle with glow
-        ctx.shadowBlur = 15;
+        // Draw particle
+        ctx.shadowBlur = 12;
         ctx.shadowColor = particle.glowColor;
         ctx.fillStyle = particle.color;
         ctx.beginPath();
@@ -240,45 +228,13 @@ export default function ParticleText() {
         ctx.shadowBlur = 0;
       });
 
-      // Draw connections between nearby particles (ONLY if in formation)
-      // Skip connections during dissolving state to avoid crazy web
-      if (stateRef.current === 'forming' || stateRef.current === 'holding') {
-        ctx.strokeStyle = 'rgba(0, 212, 255, 0.05)';
-        ctx.lineWidth = 0.3;
-        for (let i = 0; i < particlesRef.current.length; i++) {
-          // Only draw a few connections per particle to reduce web chaos
-          if (!particlesRef.current[i].inFormation) continue;
-          
-          let connectionsDrawn = 0;
-          for (let j = i + 1; j < particlesRef.current.length && connectionsDrawn < 3; j++) {
-            const p1 = particlesRef.current[i];
-            const p2 = particlesRef.current[j];
-            if (!p2.inFormation) continue;
-            
-            const dx = p2.x - p1.x;
-            const dy = p2.y - p1.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < 60) {
-              const opacity = (60 - dist) / 60;
-              ctx.strokeStyle = `rgba(0, 212, 255, ${opacity * 0.1})`;
-              ctx.beginPath();
-              ctx.moveTo(p1.x, p1.y);
-              ctx.lineTo(p2.x, p2.y);
-              ctx.stroke();
-              connectionsDrawn++;
-            }
-          }
-        }
-      }
-
       animationFrameId = requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
-      // Cancel animation frame to prevent memory leaks
+      canvas.removeEventListener('mousemove', handleMouseMove);
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
@@ -288,12 +244,9 @@ export default function ParticleText() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-0 pointer-events-none"
-      style={{ 
+      className="fixed inset-0 z-0"
+      style={{
         background: 'radial-gradient(ellipse at top, #001020 0%, #000000 50%, #000000 100%)',
-        pointerEvents: 'none',
-        touchAction: 'none',
-        userSelect: 'none',
       }}
     />
   );
