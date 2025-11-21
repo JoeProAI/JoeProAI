@@ -58,13 +58,13 @@ export default function ParticleText() {
     };
     canvas.addEventListener('mousemove', handleMouseMove);
 
-    // Create text particles at a specific position
-    const createWordParticles = (text: string, centerX: number, centerY: number): Particle[] => {
+    // Create text nodes along letter outlines (sparse, not filled)
+    const createWordNodes = (text: string, centerX: number, centerY: number): Particle[] => {
       const tempCanvas = document.createElement('canvas');
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return [];
 
-      const fontSize = 40;
+      const fontSize = 50;
       tempCtx.font = `900 ${fontSize}px Arial`;
       const metrics = tempCtx.measureText(text);
       const textWidth = metrics.width;
@@ -76,35 +76,64 @@ export default function ParticleText() {
       tempCtx.font = `900 ${fontSize}px Arial`;
       tempCtx.textAlign = 'center';
       tempCtx.textBaseline = 'middle';
-      tempCtx.fillStyle = 'white';
-      tempCtx.fillText(text, tempCanvas.width / 2, tempCanvas.height / 2);
+      tempCtx.strokeStyle = 'white';
+      tempCtx.lineWidth = 2;
+      tempCtx.strokeText(text, tempCanvas.width / 2, tempCanvas.height / 2);
 
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
       const pixels = imageData.data;
-      const particles: Particle[] = [];
+      const edgePixels: { x: number; y: number }[] = [];
 
-      const skip = 3;
-      for (let y = 0; y < tempCanvas.height; y += skip) {
-        for (let x = 0; x < tempCanvas.width; x += skip) {
+      // Find edge pixels only (outline)
+      for (let y = 1; y < tempCanvas.height - 1; y++) {
+        for (let x = 1; x < tempCanvas.width - 1; x++) {
           const index = (y * tempCanvas.width + x) * 4;
           const alpha = pixels[index + 3];
 
           if (alpha > 128) {
-            const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-            const actualX = centerX - tempCanvas.width / 2 + x;
-            const actualY = centerY - tempCanvas.height / 2 + y;
-            particles.push({
-              x: actualX,
-              y: actualY,
-              vx: 0,
-              vy: 0,
-              targetX: actualX,
-              targetY: actualY,
-              radius: Math.random() * 1.5 + 1,
-              color: color.main,
-              glowColor: color.glow,
-            });
+            // Check if this is an edge pixel (has transparent neighbor)
+            const neighbors = [
+              pixels[((y - 1) * tempCanvas.width + x) * 4 + 3],
+              pixels[((y + 1) * tempCanvas.width + x) * 4 + 3],
+              pixels[(y * tempCanvas.width + (x - 1)) * 4 + 3],
+              pixels[(y * tempCanvas.width + (x + 1)) * 4 + 3],
+            ];
+            if (neighbors.some(n => n < 128)) {
+              edgePixels.push({ x, y });
+            }
           }
+        }
+      }
+
+      // Sample nodes along the outline (sparse)
+      const particles: Particle[] = [];
+      const nodeSpacing = 8; // Distance between nodes
+      const sampledNodes: { x: number; y: number }[] = [];
+
+      for (const pixel of edgePixels) {
+        // Only add if far enough from existing nodes
+        const tooClose = sampledNodes.some(node => {
+          const dx = node.x - pixel.x;
+          const dy = node.y - pixel.y;
+          return Math.sqrt(dx * dx + dy * dy) < nodeSpacing;
+        });
+
+        if (!tooClose) {
+          sampledNodes.push(pixel);
+          const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+          const actualX = centerX - tempCanvas.width / 2 + pixel.x;
+          const actualY = centerY - tempCanvas.height / 2 + pixel.y;
+          particles.push({
+            x: actualX,
+            y: actualY,
+            vx: 0,
+            vy: 0,
+            targetX: actualX,
+            targetY: actualY,
+            radius: Math.random() * 1.5 + 2,
+            color: color.main,
+            glowColor: color.glow,
+          });
         }
       }
 
@@ -120,8 +149,8 @@ export default function ParticleText() {
         const word = WORDS[i % WORDS.length];
         const x = margin + Math.random() * (canvas.width - margin * 2);
         const y = margin + Math.random() * (canvas.height - margin * 2);
-        const wordParticles = createWordParticles(word, x, y);
-        particlesRef.current.push(...wordParticles);
+        const wordNodes = createWordNodes(word, x, y);
+        particlesRef.current.push(...wordNodes);
       }
     };
     initParticles();
@@ -206,7 +235,7 @@ export default function ParticleText() {
         }
       }
 
-      // Draw particles (word formations)
+      // Draw particles (word formations - outline nodes)
       particlesRef.current.forEach((particle) => {
         // Gentle drift toward target
         const dx = particle.targetX - particle.x;
@@ -218,7 +247,7 @@ export default function ParticleText() {
         particle.x += particle.vx;
         particle.y += particle.vy;
 
-        // Draw particle
+        // Draw particle node
         ctx.shadowBlur = 12;
         ctx.shadowColor = particle.glowColor;
         ctx.fillStyle = particle.color;
@@ -227,6 +256,27 @@ export default function ParticleText() {
         ctx.fill();
         ctx.shadowBlur = 0;
       });
+
+      // Draw connections between word nodes (to show letter shapes)
+      ctx.lineWidth = 1;
+      for (let i = 0; i < particlesRef.current.length; i++) {
+        for (let j = i + 1; j < particlesRef.current.length; j++) {
+          const p1 = particlesRef.current[i];
+          const p2 = particlesRef.current[j];
+          const dx = p2.x - p1.x;
+          const dy = p2.y - p1.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          // Connect nodes that are close (part of same letter)
+          if (dist < 15) {
+            ctx.strokeStyle = `${p1.color}80`; // Semi-transparent
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
 
       animationFrameId = requestAnimationFrame(animate);
     };
