@@ -64,20 +64,20 @@ export default function ParticleText() {
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return [];
 
-      const fontSize = 60;
+      const fontSize = 80;
       tempCtx.font = `900 ${fontSize}px Arial`;
       const metrics = tempCtx.measureText(text);
       const textWidth = metrics.width;
       const textHeight = fontSize;
 
-      tempCanvas.width = textWidth + 20;
-      tempCanvas.height = textHeight + 20;
+      tempCanvas.width = textWidth + 40;
+      tempCanvas.height = textHeight + 40;
 
       tempCtx.font = `900 ${fontSize}px Arial`;
       tempCtx.textAlign = 'center';
       tempCtx.textBaseline = 'middle';
       tempCtx.strokeStyle = 'white';
-      tempCtx.lineWidth = 3;
+      tempCtx.lineWidth = 4;
       tempCtx.strokeText(text, tempCanvas.width / 2, tempCanvas.height / 2);
 
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
@@ -105,9 +105,9 @@ export default function ParticleText() {
         }
       }
 
-      // Sample nodes along the outline (sparse)
+      // Sample nodes along the outline
       const particles: Particle[] = [];
-      const nodeSpacing = 15; // Distance between nodes - more spacing for clearer wireframe
+      const nodeSpacing = 10; // Distance between nodes
       const sampledNodes: { x: number; y: number }[] = [];
 
       for (const pixel of edgePixels) {
@@ -130,7 +130,7 @@ export default function ParticleText() {
             vy: 0,
             targetX: actualX,
             targetY: actualY,
-            radius: Math.random() * 1 + 2.5,
+            radius: Math.random() * 0.5 + 3,
             color: color.main,
             glowColor: color.glow,
           });
@@ -142,8 +142,8 @@ export default function ParticleText() {
 
     // Initialize multiple word formations scattered across page
     const initParticles = () => {
-      const wordCount = 6;
-      const margin = 150;
+      const wordCount = 5;
+      const margin = 200;
 
       for (let i = 0; i < wordCount; i++) {
         const word = WORDS[i % WORDS.length];
@@ -247,8 +247,8 @@ export default function ParticleText() {
         particle.x += particle.vx;
         particle.y += particle.vy;
 
-        // Draw particle node
-        ctx.shadowBlur = 12;
+        // Draw particle node with strong glow
+        ctx.shadowBlur = 15;
         ctx.shadowColor = particle.glowColor;
         ctx.fillStyle = particle.color;
         ctx.beginPath();
@@ -257,26 +257,8 @@ export default function ParticleText() {
         ctx.shadowBlur = 0;
       });
 
-      // Draw connections between word nodes (to show letter shapes)
-      ctx.lineWidth = 1;
-      for (let i = 0; i < particlesRef.current.length; i++) {
-        for (let j = i + 1; j < particlesRef.current.length; j++) {
-          const p1 = particlesRef.current[i];
-          const p2 = particlesRef.current[j];
-          const dx = p2.x - p1.x;
-          const dy = p2.y - p1.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          // Connect nodes that are close (part of same letter)
-          if (dist < 25) {
-            ctx.strokeStyle = `${p1.color}60`; // Semi-transparent, lighter for more spacing
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
-          }
-        }
-      }
+      // Don't draw connections between word nodes - just let the nodes themselves form letter shapes
+      // The neural network provides the dynamic connections
 
       animationFrameId = requestAnimationFrame(animate);
     };
