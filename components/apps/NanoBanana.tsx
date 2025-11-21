@@ -75,35 +75,44 @@ const NanoBanana = () => {
   // Edit image with natural language
   const handleEdit = async () => {
     if (!originalImage || !prompt.trim()) {
-      setError('Please upload an image and enter an edit prompt');
+      setError('Please upload an image and enter a prompt');
       return;
     }
 
     setIsProcessing(true);
     setError(null);
+    setAiSuggestion(null);
 
     try {
+      console.log('Sending request to API...');
       const response = await fetch('/api/nano-banana', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: `Edit this image: ${prompt}. Return only the modified image.`,
+          prompt: prompt,
           imageData: originalImage,
         }),
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to edit image');
+        throw new Error(data.error || 'Failed to analyze image');
       }
 
-      // Display AI suggestions for editing
+      if (!data.result) {
+        throw new Error('No response from AI');
+      }
+
+      // Display AI analysis
       setAiSuggestion(data.result);
       setError(null);
     } catch (err: any) {
-      setError(err.message || 'Failed to process image');
-      console.error(err);
+      console.error('Analysis error:', err);
+      setError(err.message || 'Failed to analyze image. Make sure GEMINI_API_KEY is configured.');
+      setAiSuggestion(null);
     } finally {
       setIsProcessing(false);
     }
@@ -263,6 +272,11 @@ const NanoBanana = () => {
           <li>Get AI-powered analysis and editing suggestions</li>
           <li>Powered by Google's Gemini AI</li>
         </ul>
+        <div className="mt-3 p-2 bg-red-500/10 border border-red-400/30 rounded">
+          <p className="text-red-400/90 font-semibold">⚙️ Setup Required:</p>
+          <p className="mt-1">Add <code className="bg-black/50 px-1 py-0.5 rounded text-yellow-400">GEMINI_API_KEY</code> to environment variables.</p>
+          <p className="mt-1">Get your free key at: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-yellow-400 underline hover:text-yellow-300">aistudio.google.com/apikey</a></p>
+        </div>
         <p className="mt-2 text-yellow-400/70 italic">Note: Currently provides AI analysis. Direct image generation coming soon!</p>
       </div>
     </div>
