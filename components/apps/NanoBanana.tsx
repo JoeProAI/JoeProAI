@@ -97,13 +97,16 @@ const NanoBanana = () => {
       console.log('Response status:', response.status);
       const data = await response.json();
       console.log('Response data:', data);
+      console.log('Data.result:', data.result);
+      console.log('Data keys:', Object.keys(data));
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to analyze image');
       }
 
-      if (!data.result) {
-        throw new Error('No response from AI');
+      if (!data.result || data.result.trim() === '') {
+        console.error('No result in response:', data);
+        throw new Error('No response from AI. Check server logs.');
       }
 
       // Display AI analysis
