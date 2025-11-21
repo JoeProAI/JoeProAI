@@ -7,7 +7,7 @@ interface AppCardProps {
   icon?: React.ReactNode;
   href?: string;
   onClick?: () => void;
-  color?: 'pink' | 'cyan' | 'purple' | 'green';
+  color?: 'pink' | 'cyan' | 'purple' | 'green' | 'yellow';
 }
 
 const AppCard: React.FC<AppCardProps> = ({ 
@@ -23,6 +23,7 @@ const AppCard: React.FC<AppCardProps> = ({
     cyan: 'border-neon-cyan hover:shadow-neon-cyan text-neon-cyan',
     purple: 'border-neon-purple hover:shadow-neon-purple text-neon-purple',
     green: 'border-neon-green hover:shadow-neon-green text-neon-green',
+    yellow: 'border-yellow-400 hover:shadow-yellow-400 text-yellow-400',
   };
 
   const Content = () => (
