@@ -27,14 +27,14 @@ const COLORS = [
 ];
 
 const PHRASES = [
-  'BUILD',
-  'SHIP',
-  'CODE',
-  'DEPLOY',
-  'SCALE',
-  'EXECUTE',
-  'INNOVATE',
-  'ACCELERATE',
+  'SHIP FAST',
+  'BUILD NOW',
+  'INFERENCE',
+  'DEPLOY AI',
+  'SCALE UP',
+  'TRAIN MODEL',
+  'AUTOMATE',
+  'OPTIMIZE',
 ];
 
 export default function ParticleText() {
@@ -54,13 +54,11 @@ export default function ParticleText() {
     // Set canvas size - use fallback if needed
     canvas.width = window.innerWidth > 0 ? window.innerWidth : 1920;
     canvas.height = window.innerHeight > 0 ? window.innerHeight : 1080;
-    
-    console.log('[ParticleText] Canvas size:', canvas.width, 'x', canvas.height);
 
     // Initialize particles in random positions
     const initParticles = () => {
       particlesRef.current = [];
-      for (let i = 0; i < 500; i++) {
+      for (let i = 0; i < 2000; i++) {
         const color = COLORS[Math.floor(Math.random() * COLORS.length)];
         const randomX = Math.random() * canvas.width;
         const randomY = Math.random() * canvas.height;
@@ -73,7 +71,7 @@ export default function ParticleText() {
           targetY: randomY,
           originalX: randomX,
           originalY: randomY,
-          radius: Math.random() * 1.5 + 0.5,
+          radius: Math.random() * 2 + 1,
           color: color.main,
           glowColor: color.glow,
           inFormation: false,
@@ -123,12 +121,9 @@ export default function ParticleText() {
 
     // Form text with particles
     const formText = (text: string) => {
-      console.log('[ParticleText] Forming text:', text);
       const textPositions = getTextParticles(text);
-      console.log('[ParticleText] Text positions found:', textPositions.length);
       
       if (textPositions.length === 0) {
-        console.warn('[ParticleText] No text positions generated! Check canvas size and font rendering.');
         return;
       }
       
@@ -143,8 +138,6 @@ export default function ParticleText() {
         }
       });
       
-      console.log('[ParticleText] Particles in formation:', particlesToUse.length);
-      
       // Reset others to random
       particlesRef.current.slice(textPositions.length).forEach(particle => {
         particle.inFormation = false;
@@ -153,12 +146,22 @@ export default function ParticleText() {
       });
     };
 
-    // Dissolve text back to random
+    // Dissolve text - particles drift to random gravity points
     const dissolveText = () => {
       particlesRef.current.forEach(particle => {
         particle.inFormation = false;
-        particle.targetX = Math.random() * canvas.width;
-        particle.targetY = Math.random() * canvas.height;
+        // Each particle gets a unique random target far from current position
+        const angle = Math.random() * Math.PI * 2;
+        const distance = canvas.width * 0.3 + Math.random() * canvas.width * 0.4;
+        particle.targetX = particle.x + Math.cos(angle) * distance;
+        particle.targetY = particle.y + Math.sin(angle) * distance;
+        
+        // Wrap targets around screen edges
+        if (particle.targetX < 0) particle.targetX += canvas.width;
+        if (particle.targetX > canvas.width) particle.targetX -= canvas.width;
+        if (particle.targetY < 0) particle.targetY += canvas.height;
+        if (particle.targetY > canvas.height) particle.targetY -= canvas.height;
+        
         particle.originalX = particle.targetX;
         particle.originalY = particle.targetY;
       });
@@ -167,40 +170,29 @@ export default function ParticleText() {
     // Start in dissolving state - particles are random
     stateRef.current = 'dissolving';
     timerRef.current = 0;
-    console.log('[ParticleText] Initialized:', particlesRef.current.length, 'particles, state: dissolving');
 
     // Animation loop
     let animationFrameId: number;
     const animate = () => {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      // DEBUG: Show current state and timer
-      const inFormationCount = particlesRef.current.filter(p => p.inFormation).length;
-      ctx.fillStyle = 'rgba(0, 255, 0, 0.8)';
-      ctx.font = '16px monospace';
-      ctx.fillText(`State: ${stateRef.current} | Timer: ${timerRef.current}`, 10, 25);
-      ctx.fillText(`Phrase: ${PHRASES[phraseIndexRef.current]} | In Formation: ${inFormationCount}/${particlesRef.current.length}`, 10, 50);
 
       // Update state timer
       timerRef.current++;
 
       // State machine
-      if (stateRef.current === 'dissolving' && timerRef.current > 180) {
-        // After 3 seconds of being random, form first phrase
+      if (stateRef.current === 'dissolving' && timerRef.current > 240) {
+        // After 4 seconds of drifting, form next phrase
         phraseIndexRef.current = (phraseIndexRef.current + 1) % PHRASES.length;
-        console.log('[ParticleText] State: dissolving -> forming, phrase:', PHRASES[phraseIndexRef.current]);
         formText(PHRASES[phraseIndexRef.current]);
         stateRef.current = 'forming';
         timerRef.current = 0;
-      } else if (stateRef.current === 'forming' && timerRef.current > 120) {
-        // After 2 seconds of forming, hold
-        console.log('[ParticleText] State: forming -> holding');
+      } else if (stateRef.current === 'forming' && timerRef.current > 150) {
+        // After 2.5 seconds of forming, hold
         stateRef.current = 'holding';
         timerRef.current = 0;
-      } else if (stateRef.current === 'holding' && timerRef.current > 180) {
-        // After 3 seconds of holding, dissolve
-        console.log('[ParticleText] State: holding -> dissolving');
+      } else if (stateRef.current === 'holding' && timerRef.current > 240) {
+        // After 4 seconds of holding, dissolve
         stateRef.current = 'dissolving';
         timerRef.current = 0;
         dissolveText();
@@ -218,14 +210,15 @@ export default function ParticleText() {
           particle.vx += dx * 0.01;
           particle.vy += dy * 0.01;
         } else if (!particle.inFormation) {
-          // VERY weak attraction when dissolved - almost none
-          particle.vx += dx * 0.0005;
-          particle.vy += dy * 0.0005;
+          // Extremely weak drift to gravity point - very slow
+          particle.vx += dx * 0.0001;
+          particle.vy += dy * 0.0001;
         }
 
-        // Apply strong damping to slow particles down
-        particle.vx *= 0.92;
-        particle.vy *= 0.92;
+        // Apply damping - stronger when in formation for stability
+        const damping = particle.inFormation ? 0.92 : 0.95;
+        particle.vx *= damping;
+        particle.vy *= damping;
 
         // Update position
         particle.x += particle.vx;
