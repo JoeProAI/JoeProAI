@@ -39,13 +39,12 @@ const ParticleText: React.FC = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Mouse tracking
+    // Mouse tracking - global on window so it works everywhere
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
+      mouseRef.current.x = e.clientX;
+      mouseRef.current.y = e.clientY;
     };
-    canvas.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
 
     // Initialize nodes with gravitational attractors
     const initNodes = () => {
@@ -90,11 +89,11 @@ const ParticleText: React.FC = () => {
           node.vy += (mouseDy / mouseDist) * mouseForce * 0.5;
         }
 
-        // Gravitational attractor (weak pull back)
+        // Gravitational attractor (very weak pull back)
         const attractorDx = node.attractorX - node.x;
         const attractorDy = node.attractorY - node.y;
-        node.vx += attractorDx * 0.0005;
-        node.vy += attractorDy * 0.0005;
+        node.vx += attractorDx * 0.0002;
+        node.vy += attractorDy * 0.0002;
 
         // Apply velocity
         node.x += node.vx;
@@ -148,7 +147,7 @@ const ParticleText: React.FC = () => {
     animate();
 
     return () => {
-      canvas.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousemove', handleMouseMove);
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
