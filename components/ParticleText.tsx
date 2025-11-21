@@ -64,20 +64,20 @@ export default function ParticleText() {
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return [];
 
-      const fontSize = 150;
+      const fontSize = 200;
       tempCtx.font = `900 ${fontSize}px Arial`;
       const metrics = tempCtx.measureText(text);
       const textWidth = metrics.width;
       const textHeight = fontSize;
 
-      tempCanvas.width = textWidth + 80;
-      tempCanvas.height = textHeight + 80;
+      tempCanvas.width = textWidth + 100;
+      tempCanvas.height = textHeight + 100;
 
       tempCtx.font = `900 ${fontSize}px Arial`;
       tempCtx.textAlign = 'center';
       tempCtx.textBaseline = 'middle';
       tempCtx.strokeStyle = 'white';
-      tempCtx.lineWidth = 8;
+      tempCtx.lineWidth = 10;
       tempCtx.strokeText(text, tempCanvas.width / 2, tempCanvas.height / 2);
 
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
@@ -107,7 +107,7 @@ export default function ParticleText() {
 
       // Sample nodes along the outline
       const particles: Particle[] = [];
-      const nodeSpacing = 40; // Distance between nodes - FAR apart so connecting lines are visible
+      const nodeSpacing = 60; // Distance between nodes - EXTREMELY far apart
       const sampledNodes: { x: number; y: number }[] = [];
 
       for (const pixel of edgePixels) {
@@ -130,7 +130,7 @@ export default function ParticleText() {
             vy: 0,
             targetX: actualX,
             targetY: actualY,
-            radius: Math.random() * 1 + 4,
+            radius: Math.random() * 1 + 5,
             color: color.main,
             glowColor: color.glow,
           });
@@ -142,8 +142,8 @@ export default function ParticleText() {
 
     // Initialize multiple word formations scattered across page
     const initParticles = () => {
-      const wordCount = 3;
-      const margin = 300;
+      const wordCount = 2;
+      const margin = 350;
 
       for (let i = 0; i < wordCount; i++) {
         const word = WORDS[i % WORDS.length];
@@ -248,7 +248,7 @@ export default function ParticleText() {
         particle.y += particle.vy;
 
         // Draw particle node with strong glow
-        ctx.shadowBlur = 20;
+        ctx.shadowBlur = 25;
         ctx.shadowColor = particle.glowColor;
         ctx.fillStyle = particle.color;
         ctx.beginPath();
@@ -267,9 +267,9 @@ export default function ParticleText() {
           const dy = p2.y - p1.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          // Connect nodes that are within connection range (50px to handle 40px spacing)
-          if (dist < 50) {
-            const opacity = (50 - dist) / 50;
+          // Connect nodes that are within connection range (70px to handle 60px spacing)
+          if (dist < 70) {
+            const opacity = (70 - dist) / 70;
             ctx.strokeStyle = `${p1.color}${Math.floor(opacity * 180).toString(16).padStart(2, '0')}`;
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
