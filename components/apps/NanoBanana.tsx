@@ -8,6 +8,7 @@ const NanoBanana = () => {
   const [prompt, setPrompt] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isCameraActive, setIsCameraActive] = useState(false);
@@ -97,9 +98,9 @@ const NanoBanana = () => {
         throw new Error(data.error || 'Failed to edit image');
       }
 
-      // For now, we'll show the result text. In production, you'd handle the image response
-      setEditedImage(originalImage); // Placeholder - actual API returns edited image
-      setError('Note: Using text-only model. Full image editing requires Gemini 2.5 Flash Image model.');
+      // Display AI suggestions for editing
+      setAiSuggestion(data.result);
+      setError(null);
     } catch (err: any) {
       setError(err.message || 'Failed to process image');
       console.error(err);
@@ -114,8 +115,8 @@ const NanoBanana = () => {
       <div className="flex items-center gap-3">
         <span className="text-4xl">🍌</span>
         <div>
-          <h2 className="text-2xl font-bold text-yellow-400">Nano Banana Editor</h2>
-          <p className="text-sm text-gray-400">AI-powered image editing with natural language</p>
+          <h2 className="text-2xl font-bold text-yellow-400">Nano Banana Analyzer</h2>
+          <p className="text-sm text-gray-400">AI-powered image analysis & editing suggestions</p>
         </div>
       </div>
 
@@ -201,12 +202,12 @@ const NanoBanana = () => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-yellow-400">
-              What would you like to change?
+              What would you like to know or analyze?
             </label>
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="e.g., Make the sky purple, add sunglasses, turn it into a cartoon..."
+              placeholder="e.g., What's in this image? Describe the scene. How can I improve this photo? Suggest edits..."
               className="w-full h-24 px-4 py-3 bg-black/50 border border-yellow-400/30 rounded-lg text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none resize-none"
             />
           </div>
@@ -221,7 +222,7 @@ const NanoBanana = () => {
                   : 'bg-yellow-500 hover:bg-yellow-600 text-black'
               }`}
             >
-              {isProcessing ? '🍌 Processing...' : '✨ Edit with Nano Banana'}
+              {isProcessing ? '🍌 Analyzing...' : '🔍 Analyze with Nano Banana'}
             </button>
             <button
               onClick={() => {
@@ -238,6 +239,14 @@ const NanoBanana = () => {
         </div>
       )}
 
+      {/* AI Suggestions Display */}
+      {aiSuggestion && (
+        <div className="p-4 bg-yellow-500/20 border border-yellow-400/50 rounded-lg text-yellow-100 text-sm">
+          <p className="font-semibold text-yellow-400 mb-2">🍌 Nano Banana AI Analysis:</p>
+          <p className="whitespace-pre-wrap">{aiSuggestion}</p>
+        </div>
+      )}
+
       {/* Error Display */}
       {error && (
         <div className="p-4 bg-red-500/20 border border-red-400/50 rounded-lg text-red-400 text-sm">
@@ -250,10 +259,11 @@ const NanoBanana = () => {
         <p className="font-semibold text-yellow-400 mb-2">🍌 How to use:</p>
         <ul className="list-disc list-inside space-y-1">
           <li>Upload an image or take a photo with your camera</li>
-          <li>Describe what you want to change in natural language</li>
-          <li>Click "Edit with Nano Banana" to apply your changes</li>
-          <li>Powered by Google's Gemini 2.5 Flash Image (Nano Banana)</li>
+          <li>Describe what you want to understand or analyze</li>
+          <li>Get AI-powered analysis and editing suggestions</li>
+          <li>Powered by Google's Gemini AI</li>
         </ul>
+        <p className="mt-2 text-yellow-400/70 italic">Note: Currently provides AI analysis. Direct image generation coming soon!</p>
       </div>
     </div>
   );
