@@ -64,7 +64,7 @@ export default function ParticleText() {
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return [];
 
-      const fontSize = 50;
+      const fontSize = 60;
       tempCtx.font = `900 ${fontSize}px Arial`;
       const metrics = tempCtx.measureText(text);
       const textWidth = metrics.width;
@@ -77,7 +77,7 @@ export default function ParticleText() {
       tempCtx.textAlign = 'center';
       tempCtx.textBaseline = 'middle';
       tempCtx.strokeStyle = 'white';
-      tempCtx.lineWidth = 2;
+      tempCtx.lineWidth = 3;
       tempCtx.strokeText(text, tempCanvas.width / 2, tempCanvas.height / 2);
 
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
@@ -107,7 +107,7 @@ export default function ParticleText() {
 
       // Sample nodes along the outline (sparse)
       const particles: Particle[] = [];
-      const nodeSpacing = 8; // Distance between nodes
+      const nodeSpacing = 15; // Distance between nodes - more spacing for clearer wireframe
       const sampledNodes: { x: number; y: number }[] = [];
 
       for (const pixel of edgePixels) {
@@ -130,7 +130,7 @@ export default function ParticleText() {
             vy: 0,
             targetX: actualX,
             targetY: actualY,
-            radius: Math.random() * 1.5 + 2,
+            radius: Math.random() * 1 + 2.5,
             color: color.main,
             glowColor: color.glow,
           });
@@ -268,8 +268,8 @@ export default function ParticleText() {
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           // Connect nodes that are close (part of same letter)
-          if (dist < 15) {
-            ctx.strokeStyle = `${p1.color}80`; // Semi-transparent
+          if (dist < 25) {
+            ctx.strokeStyle = `${p1.color}60`; // Semi-transparent, lighter for more spacing
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
