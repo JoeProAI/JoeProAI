@@ -1,113 +1,89 @@
-import { Metadata } from 'next';
-import GlowCard from '@/components/GlowCard';
-import { Brain, MessageSquare, Image, Code, Zap, Sparkles, Database, Globe } from 'lucide-react';
+"use client";
 
-export const metadata: Metadata = {
-  title: 'AI Apps - JoePro.ai',
-  description: 'Explore our collection of cutting-edge AI applications and tools.',
-};
-
-// Force dynamic rendering to avoid build timeout with client components
-export const dynamic = 'force-dynamic';
-
-const apps = [
-  {
-    title: 'Chat AI',
-    description: 'Conversational AI powered by OpenAI and xAI. Multi-model support with streaming responses.',
-    icon: MessageSquare,
-    href: '/apps/chat',
-    color: 'cyan' as const,
-  },
-  {
-    title: 'Image Generator',
-    description: 'Create stunning images from text prompts using state-of-the-art diffusion models.',
-    icon: Image,
-    href: '/apps/image-gen',
-    color: 'pink' as const,
-  },
-  {
-    title: 'Code Assistant',
-    description: 'AI-powered code generation, debugging, and optimization for multiple languages.',
-    icon: Code,
-    href: '/apps/code',
-    color: 'purple' as const,
-  },
-  {
-    title: 'Custom Agents',
-    description: 'Build and deploy specialized AI agents with custom prompts and configurations.',
-    icon: Brain,
-    href: '/agents',
-    color: 'green' as const,
-  },
-  {
-    title: 'Data Analyzer',
-    description: 'Upload and analyze datasets with AI-powered insights and visualizations.',
-    icon: Database,
-    href: '/apps/data',
-    color: 'cyan' as const,
-  },
-  {
-    title: 'Web Scraper',
-    description: 'Extract and analyze web content with intelligent parsing and summarization.',
-    icon: Globe,
-    href: '/apps/scraper',
-    color: 'pink' as const,
-  },
-  {
-    title: 'Prompt Studio',
-    description: 'Design, test, and optimize prompts for maximum AI performance.',
-    icon: Sparkles,
-    href: '/apps/prompts',
-    color: 'purple' as const,
-  },
-  {
-    title: 'API Playground',
-    description: 'Test and experiment with OpenAI, xAI, and other AI APIs in real-time.',
-    icon: Zap,
-    href: '/apps/api',
-    color: 'green' as const,
-  },
-];
+import React, { useState } from 'react';
+import AppCard from '@/components/apps/AppCard';
+import ChatInterface from '@/components/apps/ChatInterface';
+import NanoBanana from '@/components/apps/NanoBanana';
 
 export default function AppsPage() {
+  const [activeApp, setActiveApp] = useState<string | null>(null);
+
   return (
-    <div className="min-h-screen py-20 px-4">
+    <main className="min-h-screen p-8 md:p-24 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-neon-purple/20 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-neon-cyan/20 rounded-full blur-[100px]" />
+      </div>
+
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">
-            <span className="neon-text-cyan">AI Apps</span>
+        <header className="mb-16 text-center relative">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-pink via-neon-purple to-neon-cyan animate-glow">
+              JoePro Apps
+            </span>
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Explore our collection of cutting-edge AI applications. 
-            Each tool is designed for maximum performance and ease of use.
+            Experimental tools, AI interfaces, and digital toys from the future.
           </p>
-        </div>
+        </header>
 
-        {/* Apps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {apps.map((app, index) => (
-            <GlowCard
-              key={index}
-              title={app.title}
-              description={app.description}
-              icon={app.icon}
-              href={app.href}
-              color={app.color}
-            />
-          ))}
-        </div>
+        {/* Featured Apps / Active App View */}
+        {activeApp ? (
+          <div className="mb-16 animate-fade-in">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-white">
+                {activeApp === 'chat' ? 'Gork 4.1-fast' : 'Nano Banana'}
+              </h2>
+              <button
+                onClick={() => setActiveApp(null)}
+                className="px-4 py-2 rounded-lg border border-gray-700 hover:border-neon-pink hover:text-neon-pink transition-colors"
+              >
+                Close App
+              </button>
+            </div>
 
-        {/* Coming Soon Section */}
-        <div className="mt-20 text-center">
-          <div className="inline-block glass neon-border-purple rounded-xl p-8">
-            <h2 className="text-2xl font-bold text-neon-purple mb-2">More Apps Coming Soon</h2>
-            <p className="text-gray-400">
-              We're constantly building new AI tools. Stay tuned for updates!
-            </p>
+            <div className="bg-cyber-dark/50 backdrop-blur-xl rounded-2xl p-1 border border-white/10 shadow-2xl">
+              {activeApp === 'chat' && <ChatInterface />}
+              {activeApp === 'banana' && <NanoBanana />}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <AppCard
+              title="Gork 4.1-fast"
+              description="Advanced conversational AI with attitude. Real-time processing and neural optimization."
+              icon="🤖"
+              color="cyan"
+              onClick={() => setActiveApp('chat')}
+            />
+
+            <AppCard
+              title="Nano Banana"
+              description="Digital stress relief. Click the banana. Watch it dance. Question your life choices."
+              icon="🍌"
+              color="yellow"
+              onClick={() => setActiveApp('banana')}
+            />
+
+            <AppCard
+              title="System Monitor"
+              description="Real-time metrics of the JoePro network. (Coming Soon)"
+              icon="📊"
+              color="green"
+              href="#"
+            />
+
+            <AppCard
+              title="Neural Painter"
+              description="Generate art using pure thought waves. (Coming Soon)"
+              icon="🎨"
+              color="pink"
+              href="#"
+            />
+          </div>
+        )}
       </div>
-    </div>
+    </main>
   );
 }
