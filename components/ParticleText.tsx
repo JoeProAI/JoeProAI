@@ -64,20 +64,20 @@ export default function ParticleText() {
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return [];
 
-      const fontSize = 80;
+      const fontSize = 120;
       tempCtx.font = `900 ${fontSize}px Arial`;
       const metrics = tempCtx.measureText(text);
       const textWidth = metrics.width;
       const textHeight = fontSize;
 
-      tempCanvas.width = textWidth + 40;
-      tempCanvas.height = textHeight + 40;
+      tempCanvas.width = textWidth + 60;
+      tempCanvas.height = textHeight + 60;
 
       tempCtx.font = `900 ${fontSize}px Arial`;
       tempCtx.textAlign = 'center';
       tempCtx.textBaseline = 'middle';
       tempCtx.strokeStyle = 'white';
-      tempCtx.lineWidth = 4;
+      tempCtx.lineWidth = 6;
       tempCtx.strokeText(text, tempCanvas.width / 2, tempCanvas.height / 2);
 
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
@@ -107,7 +107,7 @@ export default function ParticleText() {
 
       // Sample nodes along the outline
       const particles: Particle[] = [];
-      const nodeSpacing = 10; // Distance between nodes
+      const nodeSpacing = 20; // Distance between nodes - larger spacing for readability
       const sampledNodes: { x: number; y: number }[] = [];
 
       for (const pixel of edgePixels) {
@@ -130,7 +130,7 @@ export default function ParticleText() {
             vy: 0,
             targetX: actualX,
             targetY: actualY,
-            radius: Math.random() * 0.5 + 3,
+            radius: Math.random() * 1 + 4,
             color: color.main,
             glowColor: color.glow,
           });
@@ -142,8 +142,8 @@ export default function ParticleText() {
 
     // Initialize multiple word formations scattered across page
     const initParticles = () => {
-      const wordCount = 5;
-      const margin = 200;
+      const wordCount = 4;
+      const margin = 250;
 
       for (let i = 0; i < wordCount; i++) {
         const word = WORDS[i % WORDS.length];
@@ -248,7 +248,7 @@ export default function ParticleText() {
         particle.y += particle.vy;
 
         // Draw particle node with strong glow
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = 20;
         ctx.shadowColor = particle.glowColor;
         ctx.fillStyle = particle.color;
         ctx.beginPath();
