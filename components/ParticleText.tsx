@@ -64,20 +64,20 @@ export default function ParticleText() {
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return [];
 
-      const fontSize = 120;
+      const fontSize = 150;
       tempCtx.font = `900 ${fontSize}px Arial`;
       const metrics = tempCtx.measureText(text);
       const textWidth = metrics.width;
       const textHeight = fontSize;
 
-      tempCanvas.width = textWidth + 60;
-      tempCanvas.height = textHeight + 60;
+      tempCanvas.width = textWidth + 80;
+      tempCanvas.height = textHeight + 80;
 
       tempCtx.font = `900 ${fontSize}px Arial`;
       tempCtx.textAlign = 'center';
       tempCtx.textBaseline = 'middle';
       tempCtx.strokeStyle = 'white';
-      tempCtx.lineWidth = 6;
+      tempCtx.lineWidth = 8;
       tempCtx.strokeText(text, tempCanvas.width / 2, tempCanvas.height / 2);
 
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
@@ -107,7 +107,7 @@ export default function ParticleText() {
 
       // Sample nodes along the outline
       const particles: Particle[] = [];
-      const nodeSpacing = 20; // Distance between nodes - larger spacing for readability
+      const nodeSpacing = 40; // Distance between nodes - FAR apart so connecting lines are visible
       const sampledNodes: { x: number; y: number }[] = [];
 
       for (const pixel of edgePixels) {
@@ -142,8 +142,8 @@ export default function ParticleText() {
 
     // Initialize multiple word formations scattered across page
     const initParticles = () => {
-      const wordCount = 4;
-      const margin = 250;
+      const wordCount = 3;
+      const margin = 300;
 
       for (let i = 0; i < wordCount; i++) {
         const word = WORDS[i % WORDS.length];
@@ -257,8 +257,27 @@ export default function ParticleText() {
         ctx.shadowBlur = 0;
       });
 
-      // Don't draw connections between word nodes - just let the nodes themselves form letter shapes
-      // The neural network provides the dynamic connections
+      // Draw connections between word nodes to show letter structure
+      ctx.lineWidth = 2;
+      for (let i = 0; i < particlesRef.current.length; i++) {
+        for (let j = i + 1; j < particlesRef.current.length; j++) {
+          const p1 = particlesRef.current[i];
+          const p2 = particlesRef.current[j];
+          const dx = p2.x - p1.x;
+          const dy = p2.y - p1.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          // Connect nodes that are within connection range (50px to handle 40px spacing)
+          if (dist < 50) {
+            const opacity = (50 - dist) / 50;
+            ctx.strokeStyle = `${p1.color}${Math.floor(opacity * 180).toString(16).padStart(2, '0')}`;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
 
       animationFrameId = requestAnimationFrame(animate);
     };
