@@ -23,17 +23,15 @@ const NanoBanana = () => {
         let width = img.width;
         let height = img.height;
 
-        // Calculate new dimensions while maintaining aspect ratio
-        if (width > height) {
-          if (width > maxWidth) {
-            height = Math.round((height * maxWidth) / width);
-            width = maxWidth;
-          }
-        } else {
-          if (height > maxHeight) {
-            width = Math.round((width * maxHeight) / height);
-            height = maxHeight;
-          }
+        // Only resize if image exceeds max dimensions
+        if (width > maxWidth || height > maxHeight) {
+          // Calculate scaling factor to fit within max dimensions while maintaining aspect ratio
+          const widthRatio = maxWidth / width;
+          const heightRatio = maxHeight / height;
+          const scale = Math.min(widthRatio, heightRatio);
+          
+          width = Math.round(width * scale);
+          height = Math.round(height * scale);
         }
 
         canvas.width = width;
