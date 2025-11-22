@@ -27,9 +27,10 @@ export async function POST(request: NextRequest) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    // Use the actual Nano Banana image generation/editing model
+    // Use Nano Banana for actual image editing!
+    const modelName = 'gemini-2.5-flash-image';
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-2.5-flash-image',
+      model: modelName,
       generationConfig: {
         temperature: 1,
         topP: 0.95,
@@ -37,6 +38,8 @@ export async function POST(request: NextRequest) {
         maxOutputTokens: 8192,
       }
     });
+    
+    console.log('Using model:', modelName);
 
     // Convert base64 image to the format Gemini expects
     const imagePart = {
@@ -52,27 +55,38 @@ export async function POST(request: NextRequest) {
     
     const response = await result.response;
     console.log('Response candidates:', JSON.stringify(response.candidates, null, 2));
-    console.log('Prompt feedback:', JSON.stringify(response.promptFeedback, null, 2));
     
-    const text = response.text();
-    console.log('AI Response text:', text);
-    console.log('Text length:', text?.length);
-
-    if (!text || text.trim() === '') {
-      // Check if response was blocked
-      if (response.promptFeedback?.blockReason) {
-        throw new Error(`Response blocked: ${response.promptFeedback.blockReason}. Try a different prompt.`);
-      }
-      if (response.candidates?.[0]?.finishReason === 'SAFETY') {
-        throw new Error('Response blocked by safety filters. Try a different prompt.');
-      }
-      
-      // Check if model is not available
-      throw new Error('Empty response from Nano Banana. The gemini-2.5-flash-image model may not be available yet in your region. Contact Google AI support or try the standard vision model for image analysis.');
+    // Nano Banana returns an IMAGE, not text!
+    const candidate = response.candidates?.[0];
+    if (!candidate) {
+      throw new Error('No response from Nano Banana');
     }
 
-    console.log('Returning result to client');
-    return NextResponse.json({ result: text });
+    // Check if response contains an image
+    const imagePart2 = candidate.content?.parts?.[0]?.inlineData;
+    if (imagePart2?.data && imagePart2?.mimeType) {
+      console.log('Received edited image:', imagePart2.mimeType);
+      // Return the edited image as base64
+      const editedImageData = `data:${imagePart2.mimeType};base64,${imagePart2.data}`;
+      return NextResponse.json({ 
+        result: 'Image edited successfully',
+        editedImage: editedImageData 
+      });
+    }
+
+    // If no image, try to get text response (for analysis mode)
+    try {
+      const text = response.text();
+      if (text && text.trim()) {
+        console.log('Received text response:', text.substring(0, 100));
+        return NextResponse.json({ result: text });
+      }
+    } catch (e) {
+      console.log('No text response available');
+    }
+
+    throw new Error('No valid response from Nano Banana');
+
   } catch (error: any) {
     console.error('Nano Banana API Error:', error);
     console.error('Error stack:', error.stack);

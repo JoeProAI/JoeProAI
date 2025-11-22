@@ -97,21 +97,28 @@ const NanoBanana = () => {
       console.log('Response status:', response.status);
       const data = await response.json();
       console.log('Response data:', data);
-      console.log('Data.result:', data.result);
       console.log('Data keys:', Object.keys(data));
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to analyze image');
+        throw new Error(data.error || 'Failed to process image');
       }
 
-      if (!data.result || data.result.trim() === '') {
-        console.error('No result in response:', data);
-        throw new Error('No response from AI. Check server logs.');
+      // Check if we got an edited image back
+      if (data.editedImage) {
+        console.log('Received edited image!');
+        setEditedImage(data.editedImage);
+        setAiSuggestion('✨ Image edited successfully!');
+        setError(null);
+      } 
+      // Or if we got a text analysis
+      else if (data.result && data.result.trim()) {
+        console.log('Received analysis:', data.result);
+        setAiSuggestion(data.result);
+        setError(null);
+      } 
+      else {
+        throw new Error('No valid response from AI');
       }
-
-      // Display AI analysis
-      setAiSuggestion(data.result);
-      setError(null);
     } catch (err: any) {
       console.error('Analysis error:', err);
       setError(err.message || 'Failed to analyze image. Make sure GEMINI_API_KEY is configured.');
@@ -214,12 +221,12 @@ const NanoBanana = () => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <label className="text-sm font-semibold text-yellow-400">
-              Describe your edit or question
+              Describe what you want to change or ask
             </label>
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Examples: 'Remove the background', 'Change the sky to purple', 'Add sunglasses', 'What's in this image?', 'Make it look like a painting'"
+              placeholder="Try: 'Remove the boot and foot', 'Change background to beach', 'Add a sunset', 'Make it black and white', 'What's in this image?'"
               className="w-full h-24 px-4 py-3 bg-black/50 border border-yellow-400/30 rounded-lg text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none resize-none"
             />
           </div>
@@ -268,28 +275,25 @@ const NanoBanana = () => {
 
       {/* Info Box */}
       <div className="p-4 bg-yellow-500/10 border border-yellow-400/30 rounded-lg text-xs text-gray-400">
-        <div className="mb-3 p-3 bg-blue-500/20 border border-blue-400/50 rounded">
-          <p className="text-blue-300 font-bold flex items-center gap-2">
-            <span className="text-lg">🍌</span>
+        <div className="mb-3 p-3 bg-green-500/20 border border-green-400/50 rounded">
+          <p className="text-green-300 font-bold flex items-center gap-2">
+            <span className="text-lg">✅</span>
             <span>Powered by Nano Banana (Gemini 2.5 Flash Image)</span>
           </p>
-          <p className="mt-2 text-blue-200/80">This model can edit and generate images with natural language! Try editing requests like "Remove the background" or "Change colors".</p>
+          <p className="mt-2 text-green-200/80">This powerful AI model can EDIT and GENERATE images with natural language! Just describe what you want!</p>
         </div>
         
-        <p className="font-semibold text-yellow-400 mb-2">🍌 How to use:</p>
+        <p className="font-semibold text-yellow-400 mb-2">🍌 What You Can Do:</p>
         <ul className="list-disc list-inside space-y-1">
-          <li>Upload an image or take a photo with your camera</li>
-          <li>Describe edits in natural language (remove objects, change backgrounds, add elements)</li>
-          <li>Get AI-powered image generation and editing results</li>
-          <li>Can also analyze images - just ask questions!</li>
+          <li><strong>Edit Images:</strong> "Remove the background", "Change sky to purple", "Add sunglasses"</li>
+          <li><strong>Analyze Images:</strong> "What's in this image?", "Describe the scene"</li>
+          <li><strong>Get Suggestions:</strong> "How can I improve this photo?"</li>
+          <li><strong>Style Transfer:</strong> "Make it look like a painting"</li>
         </ul>
         <div className="mt-3 p-2 bg-red-500/10 border border-red-400/30 rounded">
           <p className="text-red-400/90 font-semibold">⚙️ Setup Required:</p>
           <p className="mt-1">Add <code className="bg-black/50 px-1 py-0.5 rounded text-yellow-400">GEMINI_API_KEY</code> to environment variables.</p>
           <p className="mt-1">Get your free key at: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-yellow-400 underline hover:text-yellow-300">aistudio.google.com/apikey</a></p>
-        </div>
-        <div className="mt-2 p-2 bg-orange-500/10 border border-orange-400/30 rounded">
-          <p className="text-orange-400/90 text-xs">⚠️ Note: The gemini-2.5-flash-image model may not be available in all regions yet. If you get empty responses, the model might not be accessible with your API key.</p>
         </div>
       </div>
     </div>
