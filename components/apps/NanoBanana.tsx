@@ -222,7 +222,7 @@ const NanoBanana = () => {
         <span className="text-3xl md:text-4xl">🍌</span>
         <div>
           <h2 className="text-xl md:text-2xl font-bold text-yellow-400">Nano Banana Editor</h2>
-          <p className="text-xs md:text-sm text-gray-400 hidden sm:block">AI-powered image editing with natural language</p>
+          <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 hidden sm:block">AI-powered image editing with natural language</p>
         </div>
       </div>
 
@@ -245,7 +245,7 @@ const NanoBanana = () => {
               <p className="text-sm md:text-base text-yellow-400 font-semibold">
                 {isDragging ? 'Drop image here!' : 'Drag & drop image'}
               </p>
-              <p className="text-gray-400 text-xs md:text-sm">or tap buttons below</p>
+              <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">or tap buttons below</p>
             </div>
           </div>
 
@@ -303,17 +303,17 @@ const NanoBanana = () => {
       {originalImage && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
-            <h3 className="text-sm font-semibold text-yellow-400">Original</h3>
+            <h3 className="text-sm md:text-base font-semibold text-yellow-400">Original</h3>
             <img 
               src={originalImage} 
               alt="Original" 
-              className="w-full max-h-96 object-contain rounded-lg border border-yellow-400/30 bg-black/30"
+              className="w-full max-h-64 md:max-h-96 object-contain rounded-lg border border-yellow-400/30 bg-black/30"
             />
           </div>
           {editedImage && (
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm md:text-base font-semibold text-yellow-400">Edited</h3>
+                <h3 className="text-sm md:text-base font-semibold text-yellow-400">✨ Edited Result</h3>
                 <button
                   onClick={downloadImage}
                   className="px-3 py-2 md:px-4 md:py-2 bg-green-500/20 active:bg-green-500/40 hover:bg-green-500/30 border border-green-400/50 rounded text-green-400 text-xs md:text-sm font-semibold transition-all touch-manipulation"
@@ -324,7 +324,7 @@ const NanoBanana = () => {
               <img 
                 src={editedImage} 
                 alt="Edited" 
-                className="w-full max-h-96 object-contain rounded-lg border border-yellow-400/30 bg-black/30"
+                className="w-full max-h-64 md:max-h-96 object-contain rounded-lg border border-green-400/50 bg-black/30 ring-2 ring-green-500/20"
               />
             </div>
           )}
@@ -347,7 +347,7 @@ const NanoBanana = () => {
             
             {/* Quick Example Prompts */}
             <div className="flex flex-wrap gap-2">
-              <span className="text-xs text-gray-400 w-full sm:w-auto">Quick:</span>
+              <span className="text-xs text-gray-600 dark:text-gray-400 w-full sm:w-auto">Quick:</span>
               {examplePrompts.map((example, idx) => (
                 <button
                   key={idx}
@@ -416,16 +416,16 @@ const NanoBanana = () => {
       )}
 
       {/* Info Box */}
-      <div className="p-3 md:p-4 bg-yellow-500/10 border border-yellow-400/30 rounded-lg text-xs md:text-sm text-gray-400">
+      <div className="p-3 md:p-4 bg-yellow-500/10 border border-yellow-400/30 rounded-lg text-xs md:text-sm text-gray-700 dark:text-gray-400">
         <div className="mb-3 p-3 bg-green-500/20 border border-green-400/50 rounded">
-          <p className="text-green-300 font-bold flex items-center gap-2">
+          <p className="text-green-700 dark:text-green-300 font-bold flex items-center gap-2">
             <span className="text-lg">✅</span>
             <span>Powered by Nano Banana (Gemini 2.5 Flash Image)</span>
           </p>
-          <p className="mt-2 text-green-200/80">This powerful AI model can EDIT and GENERATE images with natural language! Just describe what you want!</p>
+          <p className="mt-2 text-green-800 dark:text-green-200/80">This powerful AI model can EDIT and GENERATE images with natural language! Just describe what you want!</p>
         </div>
         
-        <p className="font-semibold text-yellow-400 mb-2">🍌 What You Can Do:</p>
+        <p className="font-semibold text-yellow-600 dark:text-yellow-400 mb-2">🍌 What You Can Do:</p>
         <ul className="list-disc list-inside space-y-1">
           <li><strong>Edit Images:</strong> "Remove the background", "Change sky to purple", "Add sunglasses"</li>
           <li><strong>Analyze Images:</strong> "What's in this image?", "Describe the scene"</li>

@@ -52,25 +52,25 @@ export default function RootLayout({
               <div className="flex items-center gap-2 sm:gap-4 md:gap-6 text-xs sm:text-sm md:text-base">
                 <Link 
                   href="/apps" 
-                  className="text-gray-300 hover:text-primary transition-colors px-1.5 sm:px-0"
+                  className="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors px-1.5 sm:px-0"
                 >
                   Apps
                 </Link>
                 <Link 
                   href="/agents" 
-                  className="text-gray-300 hover:text-primary transition-colors px-1.5 sm:px-0"
+                  className="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors px-1.5 sm:px-0"
                 >
                   Agents
                 </Link>
                 <Link 
                   href="/devenv" 
-                  className="text-gray-300 hover:text-primary transition-colors px-1.5 sm:px-0"
+                  className="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors px-1.5 sm:px-0"
                 >
                   Dev
                 </Link>
                 <Link 
                   href="/feeds" 
-                  className="text-gray-300 hover:text-primary transition-colors px-1.5 sm:px-0"
+                  className="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors px-1.5 sm:px-0"
                 >
                   Feeds
                 </Link>
