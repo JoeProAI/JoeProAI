@@ -1,10 +1,28 @@
-# 🍌 Nano Banana Image Editor - Complete Code
+# AI-Powered Image Editor with Google Gemini 2.5 Flash Image
 
-## Copy-paste ready code for building your AI image editor
+## Complete Implementation Guide with Source Code
+
+This document provides production-ready code for building an image editor powered by Google's Gemini 2.5 Flash Image model (Nano Banana). All code segments are fully functional and ready for integration into Next.js applications.
+
+### Overview
+
+The implementation consists of two primary components:
+
+1. **Backend API Route** (`app/api/nano-banana/route.ts`): Handles secure communication with Google's Gemini API, processes image data, and returns edited results.
+
+2. **Frontend React Component** (`components/apps/NanoBanana.tsx`): Provides the user interface for image upload, editing prompts, and result display.
+
+### Technical Requirements
+
+- Next.js 14+ with App Router
+- React 18+ with TypeScript
+- TailwindCSS for styling
+- Google Generative AI SDK (`@google/generative-ai`)
+- Google AI API key (free tier available)
 
 ---
 
-## 📦 Installation
+## Installation
 
 ```bash
 npm install @google/generative-ai
@@ -12,7 +30,7 @@ npm install @google/generative-ai
 
 ---
 
-## 🔑 Environment Variables
+## Environment Configuration
 
 Create `.env.local`:
 
@@ -24,7 +42,7 @@ Get your free key at: https://aistudio.google.com/apikey
 
 ---
 
-## 🔧 Backend: API Route
+## Backend Implementation: API Route
 
 **File**: `app/api/nano-banana/route.ts`
 
@@ -129,9 +147,30 @@ export async function POST(request: NextRequest) {
 }
 ```
 
+### API Route Explanation
+
+**Key Implementation Details:**
+
+1. **Request Validation**: Ensures required fields (prompt, imageData) are present before processing
+2. **API Key Security**: Retrieves the Gemini API key from environment variables, keeping it secure on the server
+3. **Model Configuration**: Uses `gemini-2.5-flash-image` model with optimized generation parameters
+4. **Image Format Conversion**: Transforms base64 data URLs into the format expected by Gemini's API
+5. **Response Handling**: Distinguishes between image editing responses (primary) and text responses (fallback for analysis)
+6. **Error Management**: Comprehensive error handling with detailed logging for debugging
+
+**Response Structure:**
+
+The Nano Banana model returns edited images in this format:
+```typescript
+response.candidates[0].content.parts[0].inlineData {
+  data: string,      // Base64 encoded edited image
+  mimeType: string   // Usually "image/png"
+}
+```
+
 ---
 
-## 🎨 Frontend: React Component
+## Frontend Implementation: React Component
 
 **File**: `components/apps/NanoBanana.tsx`
 
@@ -575,9 +614,45 @@ const NanoBanana = () => {
 export default NanoBanana;
 ```
 
+### Component Explanation
+
+**Core Functionality:**
+
+1. **State Management**:
+   - `originalImage`: Stores uploaded/captured image as base64
+   - `editedImage`: Stores AI-edited result
+   - `prompt`: User's editing instruction
+   - `isProcessing`: Loading state during API calls
+   - `error`/`aiSuggestion`: User feedback display
+
+2. **Image Processing Pipeline**:
+   - `resizeImage()`: Scales images to max 2048x2048 while preserving aspect ratio
+   - Compresses to JPEG at 85% quality for optimal performance
+   - Prevents API timeouts from oversized images
+
+3. **Input Methods**:
+   - File upload via input element
+   - Drag-and-drop with visual feedback
+   - Camera capture using MediaDevices API
+
+4. **User Experience Features**:
+   - Quick prompt buttons for common edits
+   - Animated loading spinner during processing
+   - Download button for edited images
+   - Before/after comparison view
+   - Comprehensive error handling
+
+**Key Implementation Notes:**
+
+- Uses `useRef` for DOM access (file input, video element)
+- Implements drag-and-drop with `preventDefault()` to enable file drops
+- Camera stops automatically after capture to free resources
+- All images resized client-side before API transmission
+- TypeScript ensures type safety throughout the component
+
 ---
 
-## 🚀 Usage
+## Usage
 
 1. **Set up environment variable** with your Gemini API key
 2. **Copy the API route** to `app/api/nano-banana/route.ts`
@@ -596,7 +671,7 @@ export default function NanoBananaPage() {
 
 ---
 
-## ✅ Testing Checklist
+## Testing Checklist
 
 - [ ] API key is set in `.env.local`
 - [ ] Can upload images via file picker
@@ -611,7 +686,7 @@ export default function NanoBananaPage() {
 
 ---
 
-## 🎯 Key Features Implemented
+## Key Features Implemented
 
 ✅ Multiple upload methods (file, drag-drop, camera)  
 ✅ Smart image resizing (preserves aspect ratio)  
@@ -625,4 +700,135 @@ export default function NanoBananaPage() {
 
 ---
 
-That's it! Copy, paste, customize, and build! 🍌✨
+## Deployment Considerations
+
+### Environment Variables
+
+When deploying to production platforms (Vercel, Netlify, etc.), ensure:
+
+1. Add `GEMINI_API_KEY` to your platform's environment variable settings
+2. Never commit `.env.local` to version control
+3. Restart your deployment after adding environment variables
+
+### Vercel Deployment
+
+```bash
+npm run build
+vercel --prod
+```
+
+Configure environment variables in: Settings → Environment Variables
+
+### Performance Optimization
+
+- Images are automatically resized to 2048x2048 maximum
+- JPEG compression at 85% quality balances size and visual fidelity
+- Client-side processing reduces server load
+- Async state updates prevent UI blocking
+
+---
+
+## Troubleshooting
+
+### Common Issues and Solutions
+
+**Issue**: API returns empty responses  
+**Solution**: Verify you're extracting `inlineData` from `response.candidates[0].content.parts[0]`, not calling `.text()`
+
+**Issue**: Images appear cropped in UI  
+**Solution**: Ensure CSS uses `object-contain` instead of `object-cover`, and `max-h-96` instead of fixed `h-64`
+
+**Issue**: API timeouts with large images  
+**Solution**: Confirm `resizeImage()` function is called before API transmission. Check max dimensions are set to 2048x2048
+
+**Issue**: "API key not configured" error  
+**Solution**: Verify `.env.local` exists in project root with `GEMINI_API_KEY=your_key` and restart dev server
+
+**Issue**: Drag and drop not working  
+**Solution**: Ensure `e.preventDefault()` is called in `handleDragOver`, `handleDragLeave`, and `handleDrop` functions
+
+### Debugging Tips
+
+Enable detailed logging in the API route:
+
+```typescript
+console.log('Full response:', JSON.stringify(response.candidates, null, 2));
+```
+
+Monitor state changes in the component:
+
+```typescript
+console.log('State:', {
+  hasOriginal: !!originalImage,
+  hasEdited: !!editedImage,
+  promptLength: prompt.length
+});
+```
+
+---
+
+## Security Best Practices
+
+1. **API Key Protection**: Never expose `GEMINI_API_KEY` in client-side code
+2. **Input Validation**: The implementation validates file types and sizes
+3. **Error Handling**: Errors are caught and displayed without exposing sensitive information
+4. **CORS Configuration**: API routes are same-origin by default, preventing unauthorized access
+
+---
+
+## Customization Options
+
+### Modify Quick Prompts
+
+Edit the `examplePrompts` array in the component:
+
+```typescript
+const examplePrompts = [
+  "Your custom prompt",
+  "Another prompt",
+  // Add more...
+];
+```
+
+### Adjust Image Processing
+
+Change resize limits in `resizeImage()`:
+
+```typescript
+const resizeImage = (base64Str: string, maxWidth: number = 1024, maxHeight: number = 1024)
+```
+
+### Change Color Theme
+
+Replace TailwindCSS color classes:
+
+```typescript
+// Change from yellow to blue theme
+className="text-yellow-400"  →  className="text-blue-400"
+className="bg-yellow-500/20"  →  className="bg-blue-500/20"
+```
+
+---
+
+## Additional Resources
+
+- **Google AI Studio**: [https://aistudio.google.com](https://aistudio.google.com)
+- **Gemini API Documentation**: [https://ai.google.dev/gemini-api/docs](https://ai.google.dev/gemini-api/docs)
+- **Next.js Documentation**: [https://nextjs.org/docs](https://nextjs.org/docs)
+- **TailwindCSS**: [https://tailwindcss.com/docs](https://tailwindcss.com/docs)
+
+---
+
+## Summary
+
+This implementation provides a complete, production-ready AI image editor with:
+
+- Secure server-side API communication
+- Multiple image input methods
+- Intelligent client-side image processing
+- Professional UI with error handling
+- TypeScript type safety
+- Responsive design
+- Download functionality
+
+All code is copy-paste ready and fully functional. Simply add your Google AI API key and integrate into your Next.js application.
