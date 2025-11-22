@@ -14,13 +14,51 @@ const NanoBanana = () => {
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
 
+  // Resize and compress image to handle various sizes
+  const resizeImage = (base64Str: string, maxWidth: number = 2048, maxHeight: number = 2048): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        // Calculate new dimensions while maintaining aspect ratio
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          // Use JPEG with 0.85 quality for good balance of size/quality
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        }
+      };
+      img.src = base64Str;
+    });
+  };
+
   // Handle file upload
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => {
-        setOriginalImage(event.target?.result as string);
+      reader.onload = async (event) => {
+        const originalData = event.target?.result as string;
+        // Resize image to handle large uploads
+        const resizedData = await resizeImage(originalData);
+        setOriginalImage(resizedData);
         setEditedImage(null);
         setError(null);
       };
@@ -47,7 +85,7 @@ const NanoBanana = () => {
   };
 
   // Capture photo from camera
-  const capturePhoto = () => {
+  const capturePhoto = async () => {
     if (videoRef.current) {
       const canvas = document.createElement('canvas');
       canvas.width = videoRef.current.videoWidth;
@@ -56,7 +94,9 @@ const NanoBanana = () => {
       if (ctx) {
         ctx.drawImage(videoRef.current, 0, 0);
         const imageData = canvas.toDataURL('image/jpeg');
-        setOriginalImage(imageData);
+        // Resize camera capture as well
+        const resizedData = await resizeImage(imageData);
+        setOriginalImage(resizedData);
         setEditedImage(null);
         stopCamera();
       }
