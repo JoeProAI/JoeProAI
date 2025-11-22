@@ -49,28 +49,28 @@ export default function RootLayout({
               </Link>
 
               {/* Nav Links */}
-              <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
+              <div className="flex items-center gap-2 sm:gap-4 md:gap-6 text-xs sm:text-sm md:text-base">
                 <Link 
                   href="/apps" 
-                  className="text-sm sm:text-base text-gray-300 hover:text-primary transition-colors"
+                  className="text-gray-300 hover:text-primary transition-colors px-1.5 sm:px-0"
                 >
                   Apps
                 </Link>
                 <Link 
                   href="/agents" 
-                  className="text-sm sm:text-base text-gray-300 hover:text-primary transition-colors hidden xs:block"
+                  className="text-gray-300 hover:text-primary transition-colors px-1.5 sm:px-0"
                 >
                   Agents
                 </Link>
                 <Link 
                   href="/devenv" 
-                  className="text-sm sm:text-base text-gray-300 hover:text-primary transition-colors hidden sm:block"
+                  className="text-gray-300 hover:text-primary transition-colors px-1.5 sm:px-0"
                 >
-                  Dev Env
+                  Dev
                 </Link>
                 <Link 
                   href="/feeds" 
-                  className="text-sm sm:text-base text-gray-300 hover:text-primary transition-colors"
+                  className="text-gray-300 hover:text-primary transition-colors px-1.5 sm:px-0"
                 >
                   Feeds
                 </Link>
