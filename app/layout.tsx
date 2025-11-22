@@ -38,39 +38,39 @@ export default function RootLayout({
         
         {/* Navigation */}
         <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-gray-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-14 sm:h-16">
               {/* Logo */}
-              <Link href="/" className="flex items-center group">
-                <span className="text-xl font-bold">
+              <Link href="/" className="flex items-center group flex-shrink-0">
+                <span className="text-lg sm:text-xl font-bold whitespace-nowrap">
                   <span className="text-gradient">JoePro</span>
                   <span className="text-foreground">.ai</span>
                 </span>
               </Link>
 
               {/* Nav Links */}
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
                 <Link 
                   href="/apps" 
-                  className="text-gray-300 hover:text-primary transition-colors"
+                  className="text-sm sm:text-base text-gray-300 hover:text-primary transition-colors"
                 >
                   Apps
                 </Link>
                 <Link 
                   href="/agents" 
-                  className="text-gray-300 hover:text-primary transition-colors"
+                  className="text-sm sm:text-base text-gray-300 hover:text-primary transition-colors hidden xs:block"
                 >
                   Agents
                 </Link>
                 <Link 
                   href="/devenv" 
-                  className="text-gray-300 hover:text-primary transition-colors"
+                  className="text-sm sm:text-base text-gray-300 hover:text-primary transition-colors hidden sm:block"
                 >
                   Dev Env
                 </Link>
                 <Link 
                   href="/feeds" 
-                  className="text-gray-300 hover:text-primary transition-colors"
+                  className="text-sm sm:text-base text-gray-300 hover:text-primary transition-colors"
                 >
                   Feeds
                 </Link>
@@ -80,7 +80,7 @@ export default function RootLayout({
         </nav>
 
         {/* Main Content */}
-        <div className="pt-16">
+        <div className="pt-14 sm:pt-16">
           {children}
         </div>
 
