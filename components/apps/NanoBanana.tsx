@@ -216,13 +216,13 @@ const NanoBanana = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full h-full p-6 bg-gradient-to-br from-yellow-900/10 to-orange-900/10 border border-yellow-400/30 rounded-xl">
+    <div className="flex flex-col gap-4 md:gap-6 w-full h-full p-3 sm:p-4 md:p-6 bg-gradient-to-br from-yellow-900/10 to-orange-900/10 border border-yellow-400/30 rounded-xl">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <span className="text-4xl">🍌</span>
+      <div className="flex items-center gap-2 md:gap-3">
+        <span className="text-3xl md:text-4xl">🍌</span>
         <div>
-          <h2 className="text-2xl font-bold text-yellow-400">Nano Banana Editor</h2>
-          <p className="text-sm text-gray-400">AI-powered image generation & editing with natural language</p>
+          <h2 className="text-xl md:text-2xl font-bold text-yellow-400">Nano Banana Editor</h2>
+          <p className="text-xs md:text-sm text-gray-400 hidden sm:block">AI-powered image editing with natural language</p>
         </div>
       </div>
 
@@ -234,33 +234,33 @@ const NanoBanana = () => {
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${
+            className={`border-2 border-dashed rounded-lg p-4 md:p-8 text-center transition-all ${
               isDragging 
                 ? 'border-yellow-400 bg-yellow-500/20' 
                 : 'border-yellow-400/30 bg-yellow-500/5 hover:bg-yellow-500/10'
             }`}
           >
             <div className="flex flex-col items-center gap-2">
-              <div className="text-4xl">🍌</div>
-              <p className="text-yellow-400 font-semibold">
-                {isDragging ? 'Drop your image here!' : 'Drag & drop an image here'}
+              <div className="text-3xl md:text-4xl">🍌</div>
+              <p className="text-sm md:text-base text-yellow-400 font-semibold">
+                {isDragging ? 'Drop image here!' : 'Drag & drop image'}
               </p>
-              <p className="text-gray-400 text-sm">or use the buttons below</p>
+              <p className="text-gray-400 text-xs md:text-sm">or tap buttons below</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3 md:gap-4">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-6 py-4 bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-400/50 rounded-lg transition-all text-yellow-400 font-semibold"
+              className="px-4 py-3 md:px-6 md:py-4 bg-yellow-500/20 active:bg-yellow-500/40 hover:bg-yellow-500/30 border border-yellow-400/50 rounded-lg transition-all text-yellow-400 font-semibold text-sm md:text-base touch-manipulation"
             >
-              📁 Upload Image
+              📁 <span className="hidden sm:inline">Upload</span> Image
             </button>
             <button
               onClick={startCamera}
-              className="px-6 py-4 bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-400/50 rounded-lg transition-all text-yellow-400 font-semibold"
+              className="px-4 py-3 md:px-6 md:py-4 bg-yellow-500/20 active:bg-yellow-500/40 hover:bg-yellow-500/30 border border-yellow-400/50 rounded-lg transition-all text-yellow-400 font-semibold text-sm md:text-base touch-manipulation"
             >
-              📸 Take Photo
+              📸 <span className="hidden sm:inline">Take</span> Photo
             </button>
           </div>
           <input
@@ -282,16 +282,16 @@ const NanoBanana = () => {
             playsInline
             className="w-full h-64 object-cover rounded-lg border border-yellow-400/30"
           />
-          <div className="flex gap-4">
+          <div className="flex gap-3 md:gap-4">
             <button
               onClick={capturePhoto}
-              className="flex-1 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 rounded-lg transition-all text-black font-semibold"
+              className="flex-1 px-4 py-3 md:px-6 md:py-4 bg-yellow-500 active:bg-yellow-700 hover:bg-yellow-600 rounded-lg transition-all text-black font-semibold text-sm md:text-base touch-manipulation"
             >
-              📸 Capture Photo
+              📸 Capture
             </button>
             <button
               onClick={stopCamera}
-              className="px-6 py-3 bg-red-500/20 hover:bg-red-500/30 border border-red-400/50 rounded-lg transition-all text-red-400 font-semibold"
+              className="px-4 py-3 md:px-6 md:py-4 bg-red-500/20 active:bg-red-500/40 hover:bg-red-500/30 border border-red-400/50 rounded-lg transition-all text-red-400 font-semibold text-sm md:text-base touch-manipulation"
             >
               ✕ Cancel
             </button>
@@ -313,12 +313,12 @@ const NanoBanana = () => {
           {editedImage && (
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-yellow-400">Edited</h3>
+                <h3 className="text-sm md:text-base font-semibold text-yellow-400">Edited</h3>
                 <button
                   onClick={downloadImage}
-                  className="px-3 py-1 bg-green-500/20 hover:bg-green-500/30 border border-green-400/50 rounded text-green-400 text-xs font-semibold transition-all"
+                  className="px-3 py-2 md:px-4 md:py-2 bg-green-500/20 active:bg-green-500/40 hover:bg-green-500/30 border border-green-400/50 rounded text-green-400 text-xs md:text-sm font-semibold transition-all touch-manipulation"
                 >
-                  ⬇️ Download
+                  ⬇️ Save
                 </button>
               </div>
               <img 
@@ -335,24 +335,24 @@ const NanoBanana = () => {
       {originalImage && (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-yellow-400">
-              Describe what you want to change or ask
+            <label className="text-sm md:text-base font-semibold text-yellow-400">
+              Describe your edit
             </label>
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Try: 'Remove the boot and foot', 'Change background to beach', 'Add a sunset', 'Make it black and white', 'What's in this image?'"
-              className="w-full h-24 px-4 py-3 bg-black/50 border border-yellow-400/30 rounded-lg text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none resize-none"
+              placeholder="Try: 'Remove background', 'Add sunset', 'Make black and white'"
+              className="w-full h-24 md:h-28 px-3 py-2 md:px-4 md:py-3 bg-black/50 border border-yellow-400/30 rounded-lg text-white text-sm md:text-base placeholder-gray-500 focus:border-yellow-400 focus:outline-none resize-none touch-manipulation"
             />
             
             {/* Quick Example Prompts */}
             <div className="flex flex-wrap gap-2">
-              <span className="text-xs text-gray-400">Quick prompts:</span>
+              <span className="text-xs text-gray-400 w-full sm:w-auto">Quick:</span>
               {examplePrompts.map((example, idx) => (
                 <button
                   key={idx}
                   onClick={() => setPrompt(example)}
-                  className="px-3 py-1 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-400/30 rounded text-yellow-400 text-xs transition-all"
+                  className="px-2 py-1 md:px-3 md:py-1.5 bg-yellow-500/10 active:bg-yellow-500/30 hover:bg-yellow-500/20 border border-yellow-400/30 rounded text-yellow-400 text-xs md:text-sm transition-all touch-manipulation"
                 >
                   {example}
                 </button>
@@ -360,25 +360,27 @@ const NanoBanana = () => {
             </div>
           </div>
           
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
             <button
               onClick={handleEdit}
               disabled={isProcessing || !prompt.trim()}
-              className={`flex-1 px-6 py-3 rounded-lg transition-all font-semibold flex items-center justify-center gap-2 ${
+              className={`flex-1 px-4 py-3 md:px-6 md:py-4 rounded-lg transition-all font-semibold text-sm md:text-base flex items-center justify-center gap-2 touch-manipulation ${
                 isProcessing || !prompt.trim()
                   ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  : 'bg-yellow-500 hover:bg-yellow-600 text-black'
+                  : 'bg-yellow-500 active:bg-yellow-700 hover:bg-yellow-600 text-black'
               }`}
             >
               {isProcessing ? (
                 <>
-                  <div className="w-5 h-5 border-3 border-gray-400 border-t-transparent rounded-full animate-spin" />
-                  <span>Processing with Nano Banana...</span>
+                  <div className="w-4 h-4 md:w-5 md:h-5 border-3 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                  <span className="hidden sm:inline">Processing...</span>
+                  <span className="sm:hidden">Processing...</span>
                 </>
               ) : (
                 <>
                   <span>✨</span>
-                  <span>Edit with Nano Banana</span>
+                  <span className="hidden sm:inline">Edit with AI</span>
+                  <span className="sm:hidden">Edit</span>
                 </>
               )}
             </button>
@@ -388,10 +390,11 @@ const NanoBanana = () => {
                 setEditedImage(null);
                 setPrompt('');
                 setError(null);
+                setAiSuggestion(null);
               }}
-              className="px-6 py-3 bg-red-500/20 hover:bg-red-500/30 border border-red-400/50 rounded-lg transition-all text-red-400 font-semibold"
+              className="px-4 py-3 md:px-6 md:py-4 bg-red-500/20 active:bg-red-500/40 hover:bg-red-500/30 border border-red-400/50 rounded-lg transition-all text-red-400 font-semibold text-sm md:text-base touch-manipulation"
             >
-              🗑️ Clear
+              🗑️ Reset
             </button>
           </div>
         </div>
@@ -399,21 +402,21 @@ const NanoBanana = () => {
 
       {/* AI Suggestions Display */}
       {aiSuggestion && (
-        <div className="p-4 bg-yellow-500/20 border border-yellow-400/50 rounded-lg text-yellow-100 text-sm">
-          <p className="font-semibold text-yellow-400 mb-2">🍌 Nano Banana AI Analysis:</p>
+        <div className="p-3 md:p-4 bg-green-500/20 border border-green-400/50 rounded-lg text-green-400 text-xs md:text-sm">
+          <p className="font-semibold mb-1 md:mb-2">✨ Result:</p>
           <p className="whitespace-pre-wrap">{aiSuggestion}</p>
         </div>
       )}
 
       {/* Error Display */}
       {error && (
-        <div className="p-4 bg-red-500/20 border border-red-400/50 rounded-lg text-red-400 text-sm">
+        <div className="p-3 md:p-4 bg-red-500/20 border border-red-400/50 rounded-lg text-red-400 text-xs md:text-sm">
           {error}
         </div>
       )}
 
       {/* Info Box */}
-      <div className="p-4 bg-yellow-500/10 border border-yellow-400/30 rounded-lg text-xs text-gray-400">
+      <div className="p-3 md:p-4 bg-yellow-500/10 border border-yellow-400/30 rounded-lg text-xs md:text-sm text-gray-400">
         <div className="mb-3 p-3 bg-green-500/20 border border-green-400/50 rounded">
           <p className="text-green-300 font-bold flex items-center gap-2">
             <span className="text-lg">✅</span>
