@@ -13,6 +13,17 @@ const NanoBanana = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  // Quick example prompts
+  const examplePrompts = [
+    "Remove the background",
+    "Make it black and white",
+    "Add a sunset",
+    "Change to watercolor style",
+    "Enhance colors",
+    "Remove unwanted objects"
+  ];
 
   // Resize and compress image to handle various sizes
   const resizeImage = (base64Str: string, maxWidth: number = 2048, maxHeight: number = 2048): Promise<string> => {
@@ -110,6 +121,44 @@ const NanoBanana = () => {
     setIsCameraActive(false);
   };
 
+  // Download edited image
+  const downloadImage = () => {
+    if (!editedImage) return;
+    const link = document.createElement('a');
+    link.href = editedImage;
+    link.download = `nano-banana-edit-${Date.now()}.jpg`;
+    link.click();
+  };
+
+  // Handle drag and drop
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const originalData = event.target?.result as string;
+        const resizedData = await resizeImage(originalData);
+        setOriginalImage(resizedData);
+        setEditedImage(null);
+        setError(null);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Edit image with natural language
   const handleEdit = async () => {
     if (!originalImage || !prompt.trim()) {
@@ -180,6 +229,26 @@ const NanoBanana = () => {
       {/* Upload/Camera Section */}
       {!originalImage && !isCameraActive && (
         <div className="flex flex-col gap-4">
+          {/* Drag & Drop Area */}
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${
+              isDragging 
+                ? 'border-yellow-400 bg-yellow-500/20' 
+                : 'border-yellow-400/30 bg-yellow-500/5 hover:bg-yellow-500/10'
+            }`}
+          >
+            <div className="flex flex-col items-center gap-2">
+              <div className="text-4xl">🍌</div>
+              <p className="text-yellow-400 font-semibold">
+                {isDragging ? 'Drop your image here!' : 'Drag & drop an image here'}
+              </p>
+              <p className="text-gray-400 text-sm">or use the buttons below</p>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <button
               onClick={() => fileInputRef.current?.click()}
@@ -243,7 +312,15 @@ const NanoBanana = () => {
           </div>
           {editedImage && (
             <div className="flex flex-col gap-2">
-              <h3 className="text-sm font-semibold text-yellow-400">Edited</h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-yellow-400">Edited</h3>
+                <button
+                  onClick={downloadImage}
+                  className="px-3 py-1 bg-green-500/20 hover:bg-green-500/30 border border-green-400/50 rounded text-green-400 text-xs font-semibold transition-all"
+                >
+                  ⬇️ Download
+                </button>
+              </div>
               <img 
                 src={editedImage} 
                 alt="Edited" 
@@ -267,19 +344,43 @@ const NanoBanana = () => {
               placeholder="Try: 'Remove the boot and foot', 'Change background to beach', 'Add a sunset', 'Make it black and white', 'What's in this image?'"
               className="w-full h-24 px-4 py-3 bg-black/50 border border-yellow-400/30 rounded-lg text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none resize-none"
             />
+            
+            {/* Quick Example Prompts */}
+            <div className="flex flex-wrap gap-2">
+              <span className="text-xs text-gray-400">Quick prompts:</span>
+              {examplePrompts.map((example, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setPrompt(example)}
+                  className="px-3 py-1 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-400/30 rounded text-yellow-400 text-xs transition-all"
+                >
+                  {example}
+                </button>
+              ))}
+            </div>
           </div>
           
           <div className="flex gap-4">
             <button
               onClick={handleEdit}
               disabled={isProcessing || !prompt.trim()}
-              className={`flex-1 px-6 py-3 rounded-lg transition-all font-semibold ${
+              className={`flex-1 px-6 py-3 rounded-lg transition-all font-semibold flex items-center justify-center gap-2 ${
                 isProcessing || !prompt.trim()
                   ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
                   : 'bg-yellow-500 hover:bg-yellow-600 text-black'
               }`}
             >
-              {isProcessing ? '🍌 Processing...' : '✨ Edit with Nano Banana'}
+              {isProcessing ? (
+                <>
+                  <div className="w-5 h-5 border-3 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                  <span>Processing with Nano Banana...</span>
+                </>
+              ) : (
+                <>
+                  <span>✨</span>
+                  <span>Edit with Nano Banana</span>
+                </>
+              )}
             </button>
             <button
               onClick={() => {
