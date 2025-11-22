@@ -5,7 +5,7 @@ import React, { useState, useRef } from 'react';
 const NanoBanana = () => {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [editedImage, setEditedImage] = useState<string | null>(null);
-  const [prompt, setPrompt] = useState('Remove the boot and foot from image');
+  const [prompt, setPrompt] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
