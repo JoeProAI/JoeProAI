@@ -60,7 +60,7 @@ export default function AppsPage() {
 
             <AppCard
               title="Nano Banana"
-              description="Digital stress relief. Click the banana. Watch it dance. Question your life choices."
+              description="AI-powered image editing with natural language. Upload photos, describe edits, get results instantly."
               icon="🍌"
               color="yellow"
               onClick={() => setActiveApp('banana')}

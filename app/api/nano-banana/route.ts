@@ -27,8 +27,9 @@ export async function POST(request: NextRequest) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
+    // Use the actual Nano Banana image generation/editing model
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-2.0-flash-exp',
+      model: 'gemini-2.5-flash-image',
       generationConfig: {
         temperature: 1,
         topP: 0.95,
@@ -63,9 +64,11 @@ export async function POST(request: NextRequest) {
         throw new Error(`Response blocked: ${response.promptFeedback.blockReason}. Try a different prompt.`);
       }
       if (response.candidates?.[0]?.finishReason === 'SAFETY') {
-        throw new Error('Response blocked by safety filters. This model provides image analysis only, not editing.');
+        throw new Error('Response blocked by safety filters. Try a different prompt.');
       }
-      throw new Error('Empty response from AI. Note: This model analyzes images but cannot edit them. Try asking "What\'s in this image?" instead.');
+      
+      // Check if model is not available
+      throw new Error('Empty response from Nano Banana. The gemini-2.5-flash-image model may not be available yet in your region. Contact Google AI support or try the standard vision model for image analysis.');
     }
 
     console.log('Returning result to client');
