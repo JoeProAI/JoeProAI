@@ -238,7 +238,7 @@ const NanoBanana = () => {
             <img 
               src={originalImage} 
               alt="Original" 
-              className="w-full h-64 object-cover rounded-lg border border-yellow-400/30"
+              className="w-full max-h-96 object-contain rounded-lg border border-yellow-400/30 bg-black/30"
             />
           </div>
           {editedImage && (
@@ -247,7 +247,7 @@ const NanoBanana = () => {
               <img 
                 src={editedImage} 
                 alt="Edited" 
-                className="w-full h-64 object-cover rounded-lg border border-yellow-400/30"
+                className="w-full max-h-96 object-contain rounded-lg border border-yellow-400/30 bg-black/30"
               />
             </div>
           )}
