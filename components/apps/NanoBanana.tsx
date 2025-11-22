@@ -5,7 +5,7 @@ import React, { useState, useRef } from 'react';
 const NanoBanana = () => {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [editedImage, setEditedImage] = useState<string | null>(null);
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useState('Remove the boot and foot from image');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
@@ -290,11 +290,6 @@ const NanoBanana = () => {
           <li><strong>Get Suggestions:</strong> "How can I improve this photo?"</li>
           <li><strong>Style Transfer:</strong> "Make it look like a painting"</li>
         </ul>
-        <div className="mt-3 p-2 bg-red-500/10 border border-red-400/30 rounded">
-          <p className="text-red-400/90 font-semibold">⚙️ Setup Required:</p>
-          <p className="mt-1">Add <code className="bg-black/50 px-1 py-0.5 rounded text-yellow-400">GEMINI_API_KEY</code> to environment variables.</p>
-          <p className="mt-1">Get your free key at: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-yellow-400 underline hover:text-yellow-300">aistudio.google.com/apikey</a></p>
-        </div>
       </div>
     </div>
   );
