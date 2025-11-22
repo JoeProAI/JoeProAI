@@ -446,8 +446,8 @@ You now have a production-ready Nano Banana editor that:
 **Total XP Earned:** 500 🏆  
 **Achievement Unlocked:** 🍌 Nano Banana Master Builder
 
-**Live demo:** [Your deployment URL]  
-**Full code:** [GitHub repo]
+**Live demo:** https://joepro.ai  
+**Full code:** https://github.com/JoeProAI/JoeProAI
 
 ---
 
