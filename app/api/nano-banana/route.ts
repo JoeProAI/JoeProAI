@@ -50,13 +50,22 @@ export async function POST(request: NextRequest) {
     console.log('Gemini response received');
     
     const response = await result.response;
-    console.log('Response object:', response);
+    console.log('Response candidates:', JSON.stringify(response.candidates, null, 2));
+    console.log('Prompt feedback:', JSON.stringify(response.promptFeedback, null, 2));
     
     const text = response.text();
     console.log('AI Response text:', text);
+    console.log('Text length:', text?.length);
 
     if (!text || text.trim() === '') {
-      throw new Error('Empty response from AI model');
+      // Check if response was blocked
+      if (response.promptFeedback?.blockReason) {
+        throw new Error(`Response blocked: ${response.promptFeedback.blockReason}. Try a different prompt.`);
+      }
+      if (response.candidates?.[0]?.finishReason === 'SAFETY') {
+        throw new Error('Response blocked by safety filters. This model provides image analysis only, not editing.');
+      }
+      throw new Error('Empty response from AI. Note: This model analyzes images but cannot edit them. Try asking "What\'s in this image?" instead.');
     }
 
     console.log('Returning result to client');

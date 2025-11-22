@@ -219,7 +219,7 @@ const NanoBanana = () => {
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="e.g., What's in this image? Describe the scene. How can I improve this photo? Suggest edits..."
+              placeholder="Examples: 'What's in this image?', 'Describe the colors and composition', 'What improvements would you suggest?', 'Identify the objects in this photo'"
               className="w-full h-24 px-4 py-3 bg-black/50 border border-yellow-400/30 rounded-lg text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none resize-none"
             />
           </div>
@@ -268,19 +268,26 @@ const NanoBanana = () => {
 
       {/* Info Box */}
       <div className="p-4 bg-yellow-500/10 border border-yellow-400/30 rounded-lg text-xs text-gray-400">
+        <div className="mb-3 p-3 bg-orange-500/20 border border-orange-400/50 rounded">
+          <p className="text-orange-300 font-bold flex items-center gap-2">
+            <span className="text-lg">⚠️</span>
+            <span>IMPORTANT: This tool ANALYZES images, it does NOT edit or modify them!</span>
+          </p>
+          <p className="mt-2 text-orange-200/80">Ask questions like "What's in this image?" or "Describe the scene" - NOT "Remove the background" or "Change the colors".</p>
+        </div>
+        
         <p className="font-semibold text-yellow-400 mb-2">🍌 How to use:</p>
         <ul className="list-disc list-inside space-y-1">
           <li>Upload an image or take a photo with your camera</li>
-          <li>Describe what you want to understand or analyze</li>
-          <li>Get AI-powered analysis and editing suggestions</li>
-          <li>Powered by Google's Gemini AI</li>
+          <li>Ask questions to understand or analyze the image</li>
+          <li>Get AI-powered descriptions and improvement suggestions</li>
+          <li>Powered by Google's Gemini AI (vision model)</li>
         </ul>
         <div className="mt-3 p-2 bg-red-500/10 border border-red-400/30 rounded">
           <p className="text-red-400/90 font-semibold">⚙️ Setup Required:</p>
           <p className="mt-1">Add <code className="bg-black/50 px-1 py-0.5 rounded text-yellow-400">GEMINI_API_KEY</code> to environment variables.</p>
           <p className="mt-1">Get your free key at: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-yellow-400 underline hover:text-yellow-300">aistudio.google.com/apikey</a></p>
         </div>
-        <p className="mt-2 text-yellow-400/70 italic">Note: Currently provides AI analysis. Direct image generation coming soon!</p>
       </div>
     </div>
   );
